@@ -1,5 +1,7 @@
 module github.com/Brightspace/bmx
 
+go 1.14
+
 require (
 	github.com/aws/aws-sdk-go v1.15.74
 	github.com/hashicorp/vault v0.11.5 // indirect
