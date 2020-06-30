@@ -17,6 +17,7 @@ jobs:
         go-version: [1.13.x]
         platform: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
+    timeout-minutes: 5
     env:
       GO111MODULE: on
     steps:
