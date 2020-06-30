@@ -27,6 +27,16 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Checkout code
         uses: actions/checkout@v1
+      - name: Cache Go modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            $GOPATH/pkg/mod/cache/
+          key: ${{ runner.os }}-build-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
       - name: Build
         run: go build -o bmx ./cmd/bmx/.
       - name: Vet
