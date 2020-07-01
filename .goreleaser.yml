@@ -6,6 +6,7 @@ builds:
       - CGO_ENABLED=0
     goos:
       - linux
+      - darwin
       - windows
     goarch:
       - amd64
@@ -17,7 +18,7 @@ changelog:
   skip: true
 release:
   github:
-    owner: Brightspace
+    owner: jrbeverly
     name: bmx
   prerelease: auto
   name_template: "v{{.Version}}"

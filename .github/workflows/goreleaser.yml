@@ -1,20 +1,19 @@
-name: GitHub Release
+name: goreleaser-lint
 on:
   push:
-    tags:
-      - v*
+    paths:
+      - ".goreleaser.yml"
+      - .github/workflows/goreleaser.yml
 
 jobs:
   release:
-    name: Release on GitHub
+    name: Check GoReleaser
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v1
-      - name: Run GoReleaser
+      - name: Lint goreleaser
         uses: goreleaser/goreleaser-action@v2
         with:
           version: latest
-          args: release --rm-dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          args: check
