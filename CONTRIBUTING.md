@@ -15,7 +15,7 @@
 
 6. Submit a pull request to this repository. Wait for tests to run and someone
    to chime in.
-   
+
 ## Coding Style
 
 This repository is configured with [EditorConfig](http://editorconfig.org) rules and
