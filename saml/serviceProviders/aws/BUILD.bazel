@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["provider.go"],
+    importpath = "github.com/jrbeverly/bmx/saml/serviceProviders/aws",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//console:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws/session:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/sts:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/sts/stsiface:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["provider_test.go"],
+    embed = [":go_default_library"],
+    deps = [
+        "//mocks:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/sts:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/sts/stsiface:go_default_library",
+    ],
+)

@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["okta.go"],
+    importpath = "github.com/jrbeverly/bmx/saml/identityProviders/okta",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//console:go_default_library",
+        "//saml/identityProviders/okta/file:go_default_library",
+        "@org_golang_x_net//html:go_default_library",
+        "@org_golang_x_net//publicsuffix:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["okta_test.go"],
+    embed = [":go_default_library"],
+    deps = [
+        "//saml/identityProviders/okta/file:go_default_library",
+        "//saml/identityProviders/okta/mocks:go_default_library",
+    ],
+)

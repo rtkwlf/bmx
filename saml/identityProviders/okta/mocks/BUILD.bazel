@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["mocks.go"],
+    importpath = "github.com/jrbeverly/bmx/saml/identityProviders/okta/mocks",
+    visibility = ["//visibility:public"],
+    deps = ["//saml/identityProviders/okta/file:go_default_library"],
+)

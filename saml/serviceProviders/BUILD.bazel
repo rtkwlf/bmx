@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "UserInfo.go",
+        "serviceProvider.go",
+    ],
+    importpath = "github.com/jrbeverly/bmx/saml/serviceProviders",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_aws_aws_sdk_go//service/sts:go_default_library"],
+)

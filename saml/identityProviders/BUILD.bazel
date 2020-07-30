@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["IdentityProvider.go"],
+    importpath = "github.com/jrbeverly/bmx/saml/identityProviders",
+    visibility = ["//visibility:public"],
+    deps = ["//saml/identityProviders/okta:go_default_library"],
+)
