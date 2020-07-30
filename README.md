@@ -11,7 +11,7 @@ BMX prints detailed usage information when you run `bmx -h` or `bmx <cmd> -h`.
 
 ## Installation
 
-Available versions of BMX are available on the [releases](https://github.com/Brightspace/bmx/releases) page. 
+Available versions of BMX are available on the [releases](https://github.com/jrbeverly/bmx/releases) page. 
 
 ## Features
 
@@ -57,18 +57,18 @@ BMX is designed to be extensible and easily rolled out.
 ### Developer Setup
 
 ```sh
-go get github.com/Brightspace/bmx
+go get github.com/jrbeverly/bmx
 ```
 
 ### Building
 
 ```bash
-go build github.com/Brightspace/bmx/cmd/bmx
+go build github.com/jrbeverly/bmx/cmd/bmx
 ```
 
 ### Getting Involved
 
-BMX has [issues](https://github.com/Brightspace/bmx/issues).
+BMX has [issues](https://github.com/jrbeverly/bmx/issues).
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 

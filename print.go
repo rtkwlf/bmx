@@ -20,10 +20,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Brightspace/bmx/saml/identityProviders"
+	"github.com/jrbeverly/bmx/saml/identityProviders"
 
-	"github.com/Brightspace/bmx/saml/serviceProviders"
-	"github.com/Brightspace/bmx/saml/serviceProviders/aws"
+	"github.com/jrbeverly/bmx/saml/serviceProviders"
+	"github.com/jrbeverly/bmx/saml/serviceProviders/aws"
 	"github.com/aws/aws-sdk-go/service/sts"
 )
 

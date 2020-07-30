@@ -23,7 +23,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/Brightspace/bmx/config"
+	"github.com/jrbeverly/bmx/config"
 	"github.com/magiconair/properties/assert"
 )
 

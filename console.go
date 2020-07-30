@@ -22,10 +22,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Brightspace/bmx/console"
-	"github.com/Brightspace/bmx/saml/identityProviders"
-	"github.com/Brightspace/bmx/saml/identityProviders/okta"
-	"github.com/Brightspace/bmx/saml/serviceProviders"
+	"github.com/jrbeverly/bmx/console"
+	"github.com/jrbeverly/bmx/saml/identityProviders"
+	"github.com/jrbeverly/bmx/saml/identityProviders/okta"
+	"github.com/jrbeverly/bmx/saml/serviceProviders"
 )
 
 const (

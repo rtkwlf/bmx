@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Brightspace/bmx/config"
+	"github.com/jrbeverly/bmx/config"
 
 	"github.com/spf13/cobra"
 )

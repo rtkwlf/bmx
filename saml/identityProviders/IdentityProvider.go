@@ -17,7 +17,7 @@ limitations under the License.
 package identityProviders
 
 import (
-	"github.com/Brightspace/bmx/saml/identityProviders/okta"
+	"github.com/jrbeverly/bmx/saml/identityProviders/okta"
 )
 
 type IdentityProvider interface {

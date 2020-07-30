@@ -20,8 +20,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Brightspace/bmx"
-	"github.com/Brightspace/bmx/mocks"
+	"github.com/jrbeverly/bmx"
+	"github.com/jrbeverly/bmx/mocks"
 )
 
 func assertAwsTokenEnv(t *testing.T, output string) {

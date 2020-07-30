@@ -1,4 +1,4 @@
-module github.com/Brightspace/bmx
+module github.com/jrbeverly/bmx
 
 go 1.14
 

@@ -30,8 +30,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Brightspace/bmx/console"
-	"github.com/Brightspace/bmx/saml/identityProviders/okta/file"
+	"github.com/jrbeverly/bmx/console"
+	"github.com/jrbeverly/bmx/saml/identityProviders/okta/file"
 	"golang.org/x/net/html"
 	"golang.org/x/net/publicsuffix"
 )

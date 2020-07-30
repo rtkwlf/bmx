@@ -20,13 +20,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Brightspace/bmx/mocks"
+	"github.com/jrbeverly/bmx/mocks"
 
 	"github.com/aws/aws-sdk-go/service/sts/stsiface"
 
 	"github.com/aws/aws-sdk-go/aws"
 
-	awsService "github.com/Brightspace/bmx/saml/serviceProviders/aws"
+	awsService "github.com/jrbeverly/bmx/saml/serviceProviders/aws"
 	"github.com/aws/aws-sdk-go/service/sts"
 )
 

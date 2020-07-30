@@ -24,9 +24,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Brightspace/bmx/saml/identityProviders/okta"
-	"github.com/Brightspace/bmx/saml/identityProviders/okta/file"
-	"github.com/Brightspace/bmx/saml/identityProviders/okta/mocks"
+	"github.com/jrbeverly/bmx/saml/identityProviders/okta"
+	"github.com/jrbeverly/bmx/saml/identityProviders/okta/file"
+	"github.com/jrbeverly/bmx/saml/identityProviders/okta/mocks"
 )
 
 var (

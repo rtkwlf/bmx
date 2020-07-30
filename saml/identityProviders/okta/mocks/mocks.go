@@ -17,7 +17,7 @@ limitations under the License.
 package mocks
 
 import (
-	"github.com/Brightspace/bmx/saml/identityProviders/okta/file"
+	"github.com/jrbeverly/bmx/saml/identityProviders/okta/file"
 )
 
 type SessionCache struct {

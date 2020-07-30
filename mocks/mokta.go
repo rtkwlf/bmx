@@ -19,7 +19,7 @@ package mocks
 import (
 	"net/url"
 
-	"github.com/Brightspace/bmx/saml/identityProviders/okta"
+	"github.com/jrbeverly/bmx/saml/identityProviders/okta"
 )
 
 type Mokta struct {

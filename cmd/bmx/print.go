@@ -20,11 +20,11 @@ import (
 	"log"
 	"fmt"
 
-	"github.com/Brightspace/bmx/config"
+	"github.com/jrbeverly/bmx/config"
 
-	"github.com/Brightspace/bmx/saml/identityProviders/okta"
+	"github.com/jrbeverly/bmx/saml/identityProviders/okta"
 
-	"github.com/Brightspace/bmx"
+	"github.com/jrbeverly/bmx"
 	"github.com/spf13/cobra"
 )
 

@@ -24,7 +24,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Brightspace/bmx/console"
+	"github.com/jrbeverly/bmx/console"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
