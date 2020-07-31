@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
@@ -9,17 +9,11 @@ go_library(
         "write.go",
     ],
     importpath = "github.com/jrbeverly/bmx/cmd/bmx",
-    visibility = ["//visibility:private"],
+    visibility = ["//visibility:public"],
     deps = [
         "//:go_default_library",
         "//config:go_default_library",
         "//saml/identityProviders/okta:go_default_library",
         "@com_github_spf13_cobra//:go_default_library",
     ],
-)
-
-go_binary(
-    name = "bmx",
-    embed = [":go_default_library"],
-    visibility = ["//visibility:public"],
 )

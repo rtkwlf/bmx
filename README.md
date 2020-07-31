@@ -64,6 +64,10 @@ go get github.com/jrbeverly/bmx
 
 ```bash
 go build github.com/jrbeverly/bmx/cmd/bmx
+
+bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //:bmx
+bazel build --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64 //:bmx
+bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //:bmx
 ```
 
 ### Getting Involved
