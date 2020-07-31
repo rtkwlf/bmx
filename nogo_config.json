@@ -1,0 +1,7 @@
+{
+    "unreachable": {
+      "exclude_files": {
+        "external/": "external dependencies"
+      }
+    }
+  }
