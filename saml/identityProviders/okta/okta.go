@@ -59,6 +59,8 @@ func NewOktaClient(org string) (*OktaClient, error) {
 		HttpClient:    httpClient,
 		SessionCache:  oktaSessionStorage,
 		ConsoleReader: consoleReader,
+		Timeout:       2 * time.Second,
+		Retries:       15,
 	}
 
 	client.BaseUrl, _ = url.Parse(fmt.Sprintf("https://%s.okta.com/api/v1/", org))
@@ -76,6 +78,8 @@ type OktaClient struct {
 	SessionCache  SessionCache
 	ConsoleReader console.ConsoleReader
 	BaseUrl       *url.URL
+	Timeout       time.Duration
+	Retries       int
 }
 
 func (o *OktaClient) GetSaml(appLink OktaAppLink) (string, error) {
@@ -266,6 +270,54 @@ func removeExpiredOktaSessions(sourceCaches []file.OktaSessionCache) []file.Okta
 	return returnCache
 }
 
+func (o *OktaClient) verifyPushMfa(oktaAuthResponse *OktaAuthResponse, selectedFactor OktaAuthFactors) error {
+	verified := false
+	for retry := 0; retry < o.Retries; retry++ {
+		body := fmt.Sprintf(`{"stateToken":"%s"}`, oktaAuthResponse.StateToken)
+		authResponse, err := o.HttpClient.Post(selectedFactor.Links.Verify.Url, "application/json", strings.NewReader(body))
+		if err != nil {
+			return err
+		}
+
+		z, _ := ioutil.ReadAll(authResponse.Body)
+		if err := json.Unmarshal(z, &oktaAuthResponse); err != nil {
+			return err
+		}
+
+		if oktaAuthResponse.Status == "SUCCESS" {
+			verified = true
+			break
+		} else if oktaAuthResponse.Status == "MFA_CHALLENGE" || oktaAuthResponse.Status == "WAITING" {
+			time.Sleep(o.Timeout)
+		}
+	}
+
+	if !verified {
+		return fmt.Errorf("Failed to verify challenge within timeout window.")
+	}
+
+	return nil
+}
+
+func (o *OktaClient) verifyTotpMfa(oktaAuthResponse *OktaAuthResponse, selectedFactor OktaAuthFactors) error {
+	code, err := o.ConsoleReader.ReadLine("Code: ")
+	if err != nil {
+		return err
+	}
+	body := fmt.Sprintf(`{"stateToken":"%s","passCode":"%s"}`, oktaAuthResponse.StateToken, code)
+	authResponse, err := o.HttpClient.Post(selectedFactor.Links.Verify.Url, "application/json", strings.NewReader(body))
+	if err != nil {
+		return err
+	}
+
+	z, _ := ioutil.ReadAll(authResponse.Body)
+	if err := json.Unmarshal(z, &oktaAuthResponse); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (o *OktaClient) doMfa(oktaAuthResponse *OktaAuthResponse) error {
 	if oktaAuthResponse.Status == "MFA_REQUIRED" {
 		fmt.Fprintln(os.Stderr, "MFA Required")
@@ -278,6 +330,7 @@ func (o *OktaClient) doMfa(oktaAuthResponse *OktaAuthResponse) error {
 		if mfaIdx, err = o.ConsoleReader.ReadInt("Select an available MFA option: "); err != nil {
 			log.Fatal(err)
 		}
+		selectedFactor := oktaAuthResponse.Embedded.Factors[mfaIdx]
 		vurl := oktaAuthResponse.Embedded.Factors[mfaIdx].Links.Verify.Url
 
 		body := fmt.Sprintf(`{"stateToken":"%s"}`, oktaAuthResponse.StateToken)
@@ -292,19 +345,20 @@ func (o *OktaClient) doMfa(oktaAuthResponse *OktaAuthResponse) error {
 			log.Fatal(err)
 		}
 
-		var code string
-		if code, err = o.ConsoleReader.ReadLine("Code: "); err != nil {
-			log.Fatal(err)
-		}
-		body = fmt.Sprintf(`{"stateToken":"%s","passCode":"%s"}`, oktaAuthResponse.StateToken, code)
-		authResponse, err = o.HttpClient.Post(vurl, "application/json", strings.NewReader(body))
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		z, _ = ioutil.ReadAll(authResponse.Body)
-		if err := json.Unmarshal(z, &oktaAuthResponse); err != nil {
-			log.Fatal(err)
+		// This is a rough outline and can be better organized. For now
+		// I'm comfortable with adding in this kind of handling for
+		// multiple MFA factors. I'd like for this to be done in a
+		// mapped action form (e.g. actions[factortype] => perform action)
+		if selectedFactor.FactorType == "token:software:totp" {
+			err = o.verifyTotpMfa(oktaAuthResponse, selectedFactor)
+			if err != nil {
+				log.Fatal(err)
+			}
+		} else if selectedFactor.FactorType == "push" {
+			err = o.verifyPushMfa(oktaAuthResponse, selectedFactor)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}
 	return nil

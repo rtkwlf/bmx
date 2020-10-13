@@ -22,9 +22,9 @@ import (
 
 	"github.com/jrbeverly/bmx/saml/identityProviders"
 
+	"github.com/aws/aws-sdk-go/service/sts"
 	"github.com/jrbeverly/bmx/saml/serviceProviders"
 	"github.com/jrbeverly/bmx/saml/serviceProviders/aws"
-	"github.com/aws/aws-sdk-go/service/sts"
 )
 
 var (

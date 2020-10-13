@@ -1,14 +1,8 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test", "nogo")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test", "nogo")
 load("@bazel_gazelle//:def.bzl", "gazelle")
 
 # gazelle:prefix github.com/jrbeverly/bmx
 gazelle(name = "gazelle")
-
-go_binary(
-    name = "bmx",
-    embed = ["//cmd/bmx:go_default_library"],
-    visibility = ["//visibility:public"],
-)
 
 go_library(
     name = "go_default_library",

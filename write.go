@@ -21,9 +21,9 @@ import (
 	"os"
 	"runtime"
 
+	"github.com/aws/aws-sdk-go/service/sts"
 	"github.com/jrbeverly/bmx/saml/identityProviders"
 	"github.com/jrbeverly/bmx/saml/serviceProviders"
-	"github.com/aws/aws-sdk-go/service/sts"
 	"gopkg.in/ini.v1"
 )
 
