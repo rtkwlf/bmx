@@ -8,6 +8,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "console.go",
+        "credential-process.go",
         "print.go",
         "print_unix.go",
         "print_windows.go",

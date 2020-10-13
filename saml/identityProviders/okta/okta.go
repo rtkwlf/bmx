@@ -26,7 +26,6 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
-	"os"
 	"strings"
 	"time"
 
@@ -320,9 +319,9 @@ func (o *OktaClient) verifyTotpMfa(oktaAuthResponse *OktaAuthResponse, selectedF
 
 func (o *OktaClient) doMfa(oktaAuthResponse *OktaAuthResponse) error {
 	if oktaAuthResponse.Status == "MFA_REQUIRED" {
-		fmt.Fprintln(os.Stderr, "MFA Required")
+		o.ConsoleReader.Println("MFA Required")
 		for idx, factor := range oktaAuthResponse.Embedded.Factors {
-			fmt.Fprintf(os.Stderr, "%d - %s\n", idx, factor.FactorType)
+			o.ConsoleReader.Println(fmt.Sprintf("%d - %s", idx, factor.FactorType))
 		}
 
 		var mfaIdx int

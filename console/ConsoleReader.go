@@ -1,25 +1,7 @@
-/*
-Copyright 2019 D2L Corporation
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package console
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 	"syscall"
 
@@ -30,13 +12,21 @@ type ConsoleReader interface {
 	ReadLine(prompt string) (string, error)
 	ReadPassword(prompt string) (string, error)
 	ReadInt(prompt string) (int, error)
+	Println(prompt string) error
 }
 
 type DefaultConsoleReader struct{}
 
+func (r DefaultConsoleReader) Println(prompt string) error {
+	outf := NewPromptWriter()
+	fmt.Fprintln(outf, prompt)
+	return nil
+}
+
 func (r DefaultConsoleReader) ReadLine(prompt string) (string, error) {
-	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Fprint(os.Stderr, prompt)
+	scanner := NewScanner()
+	outf := NewPromptWriter()
+	fmt.Fprint(outf, prompt)
 	var s string
 	scanner.Scan()
 	if scanner.Err() != nil {
@@ -62,8 +52,9 @@ func (r DefaultConsoleReader) ReadInt(prompt string) (int, error) {
 }
 
 func (r DefaultConsoleReader) ReadPassword(prompt string) (string, error) {
-	fmt.Fprint(os.Stderr, prompt)
-	var pass, err = terminal.ReadPassword(int(syscall.Stdin))
+	outf := NewPromptWriter()
+	fmt.Fprint(outf, prompt)
+	pass, err := terminal.ReadPassword(int(syscall.Stdin))
 
 	if err != nil {
 		return "", err

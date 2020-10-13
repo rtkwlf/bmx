@@ -2,7 +2,11 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["ConsoleReader.go"],
+    srcs = [
+        "ConsoleReader.go",
+        "ConsoleReader_unix.go",
+        "ConsoleReader_windows.go",
+    ],
     importpath = "github.com/jrbeverly/bmx/console",
     visibility = ["//visibility:public"],
     deps = ["@org_golang_x_crypto//ssh/terminal:go_default_library"],

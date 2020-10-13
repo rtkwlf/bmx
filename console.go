@@ -19,7 +19,6 @@ package bmx
 import (
 	"fmt"
 	"log"
-	"os"
 	"strings"
 
 	"github.com/jrbeverly/bmx/console"
@@ -69,7 +68,7 @@ func getPassword(noMask bool) string {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Fprintln(os.Stderr)
+		// fmt.Fprintln(os.Stderr)
 	}
 	return pass
 }
@@ -95,10 +94,10 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 	app, found := findApp(user.Account, oktaApplications)
 	if !found {
 		// select an account
-		fmt.Fprintln(os.Stderr, "Available accounts:")
+		ConsoleReader.Println("Available accounts:")
 		for idx, a := range oktaApplications {
 			if a.AppName == "amazon_aws" {
-				os.Stderr.WriteString(fmt.Sprintf("[%d] %s\n", idx, a.Label))
+				ConsoleReader.Println(fmt.Sprintf("[%d] %s", idx, a.Label))
 			}
 		}
 		var accountId int
