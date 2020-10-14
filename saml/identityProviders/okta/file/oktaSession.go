@@ -35,6 +35,10 @@ type OktaSessionStorage struct{}
 
 func (o *OktaSessionStorage) SaveSessions(sessions []OktaSessionCache) {
 	sessionsJSON, _ := json.Marshal(sessions)
+	bmxHome := path.Join(userHomeDir(), ".bmx")
+	if _, err := os.Stat(bmxHome); os.IsNotExist(err) {
+		os.MkdirAll(bmxHome, os.ModeDir|os.ModePerm)
+	}
 	ioutil.WriteFile(path.Join(userHomeDir(), ".bmx", "sessions"), sessionsJSON, 0644)
 }
 
