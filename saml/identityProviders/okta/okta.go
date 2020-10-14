@@ -29,8 +29,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jrbeverly/bmx/console"
-	"github.com/jrbeverly/bmx/saml/identityProviders/okta/file"
+	"github.com/rtkwlf/bmx/console"
+	"github.com/rtkwlf/bmx/saml/identityProviders/okta/file"
 	"golang.org/x/net/html"
 	"golang.org/x/net/publicsuffix"
 )

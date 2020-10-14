@@ -1,7 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test", "nogo")
 load("@bazel_gazelle//:def.bzl", "gazelle")
 
-# gazelle:prefix github.com/jrbeverly/bmx
+# gazelle:prefix github.com/rtkwlf/bmx
 gazelle(name = "gazelle")
 
 go_library(
@@ -14,7 +14,7 @@ go_library(
         "print_windows.go",
         "write.go",
     ],
-    importpath = "github.com/jrbeverly/bmx",
+    importpath = "github.com/rtkwlf/bmx",
     visibility = ["//visibility:public"],
     deps = [
         "//console:go_default_library",

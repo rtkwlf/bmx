@@ -24,7 +24,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/jrbeverly/bmx/console"
+	"github.com/rtkwlf/bmx/console"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"

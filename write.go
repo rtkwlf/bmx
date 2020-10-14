@@ -22,9 +22,9 @@ import (
 	"runtime"
 
 	"github.com/aws/aws-sdk-go/service/sts"
-	"github.com/jrbeverly/bmx/console"
-	"github.com/jrbeverly/bmx/saml/identityProviders"
-	"github.com/jrbeverly/bmx/saml/serviceProviders"
+	"github.com/rtkwlf/bmx/console"
+	"github.com/rtkwlf/bmx/saml/identityProviders"
+	"github.com/rtkwlf/bmx/saml/serviceProviders"
 	"gopkg.in/ini.v1"
 )
 

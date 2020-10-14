@@ -21,10 +21,10 @@ import (
 	"log"
 	"strings"
 
-	"github.com/jrbeverly/bmx/console"
-	"github.com/jrbeverly/bmx/saml/identityProviders"
-	"github.com/jrbeverly/bmx/saml/identityProviders/okta"
-	"github.com/jrbeverly/bmx/saml/serviceProviders"
+	"github.com/rtkwlf/bmx/console"
+	"github.com/rtkwlf/bmx/saml/identityProviders"
+	"github.com/rtkwlf/bmx/saml/identityProviders/okta"
+	"github.com/rtkwlf/bmx/saml/serviceProviders"
 )
 
 const (

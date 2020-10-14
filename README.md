@@ -11,7 +11,7 @@ BMX prints detailed usage information when you run `bmx -h` or `bmx <cmd> -h`.
 
 ## Installation
 
-Available versions of BMX are available on the [releases](https://github.com/jrbeverly/bmx/releases) page. 
+Available versions of BMX are available on the [releases](https://github.com/rtkwlf/bmx/releases) page. 
 
 ## Features
 
@@ -57,13 +57,13 @@ BMX is designed to be extensible and easily rolled out.
 ### Developer Setup
 
 ```sh
-go get github.com/jrbeverly/bmx
+go get github.com/rtkwlf/bmx
 ```
 
 ### Building
 
 ```bash
-go build github.com/jrbeverly/bmx/cmd/bmx
+go build github.com/rtkwlf/bmx/cmd/bmx
 
 bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //cmd/bmx:bmx
 bazel build --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64 //cmd/bmx:bmx
@@ -72,7 +72,7 @@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //cmd/bmx:
 
 ### Getting Involved
 
-BMX has [issues](https://github.com/jrbeverly/bmx/issues).
+BMX has [issues](https://github.com/rtkwlf/bmx/issues).
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 

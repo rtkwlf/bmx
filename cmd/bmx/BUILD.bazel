@@ -9,7 +9,7 @@ go_library(
         "version.go",
         "write.go",
     ],
-    importpath = "github.com/jrbeverly/bmx/cmd/bmx",
+    importpath = "github.com/rtkwlf/bmx/cmd/bmx",
     visibility = ["//visibility:public"],
     deps = [
         "//:go_default_library",

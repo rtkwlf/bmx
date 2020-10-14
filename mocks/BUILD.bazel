@@ -6,7 +6,7 @@ go_library(
         "consoleReader.go",
         "mokta.go",
     ],
-    importpath = "github.com/jrbeverly/bmx/mocks",
+    importpath = "github.com/rtkwlf/bmx/mocks",
     visibility = ["//visibility:public"],
     deps = ["//saml/identityProviders/okta:go_default_library"],
 )

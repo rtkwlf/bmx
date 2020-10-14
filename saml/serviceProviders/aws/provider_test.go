@@ -20,14 +20,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jrbeverly/bmx/mocks"
+	"github.com/rtkwlf/bmx/mocks"
 
 	"github.com/aws/aws-sdk-go/service/sts/stsiface"
 
 	"github.com/aws/aws-sdk-go/aws"
 
 	"github.com/aws/aws-sdk-go/service/sts"
-	awsService "github.com/jrbeverly/bmx/saml/serviceProviders/aws"
+	awsService "github.com/rtkwlf/bmx/saml/serviceProviders/aws"
 )
 
 type stsMock struct {

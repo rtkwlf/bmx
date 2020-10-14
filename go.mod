@@ -1,4 +1,4 @@
-module github.com/jrbeverly/bmx
+module github.com/rtkwlf/bmx
 
 go 1.14
 

@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "go_default_library",
     srcs = ["okta.go"],
-    importpath = "github.com/jrbeverly/bmx/saml/identityProviders/okta",
+    importpath = "github.com/rtkwlf/bmx/saml/identityProviders/okta",
     visibility = ["//visibility:public"],
     deps = [
         "//console:go_default_library",
