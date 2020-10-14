@@ -32,19 +32,11 @@ const (
 	passwordPrompt = "Okta Password: "
 )
 
-var (
-	ConsoleReader console.ConsoleReader
-)
-
-func init() {
-	ConsoleReader = console.DefaultConsoleReader{}
-}
-
-func getUserIfEmpty(usernameFlag string) string {
+func getUserIfEmpty(consolerw console.ConsoleReader, usernameFlag string) string {
 	var username string
 	if len(usernameFlag) == 0 {
 		var err error
-		username, err = ConsoleReader.ReadLine(usernamePrompt)
+		username, err = consolerw.ReadLine(usernamePrompt)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -54,17 +46,17 @@ func getUserIfEmpty(usernameFlag string) string {
 	return username
 }
 
-func getPassword(noMask bool) string {
+func getPassword(consolerw console.ConsoleReader, noMask bool) string {
 	var pass string
 	if noMask {
 		var err error
-		pass, err = ConsoleReader.ReadLine(passwordPrompt)
+		pass, err = consolerw.ReadLine(passwordPrompt)
 		if err != nil {
 			log.Fatal(err)
 		}
 	} else {
 		var err error
-		pass, err = ConsoleReader.ReadPassword(passwordPrompt)
+		pass, err = consolerw.ReadPassword(passwordPrompt)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -73,12 +65,12 @@ func getPassword(noMask bool) string {
 	return pass
 }
 
-func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.IdentityProvider) (string, error) {
+func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.IdentityProvider, consolerw console.ConsoleReader) (string, error) {
 	var userID string
 	var ok bool
 	userID, ok = oktaClient.AuthenticateFromCache(user.User, user.Org)
 	if !ok {
-		user.Password = getPassword(user.NoMask)
+		user.Password = getPassword(consolerw, user.NoMask)
 		var err error
 		userID, err = oktaClient.Authenticate(user.User, user.Password, user.Org)
 		if err != nil {
@@ -94,14 +86,14 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 	app, found := findApp(user.Account, oktaApplications)
 	if !found {
 		// select an account
-		ConsoleReader.Println("Available accounts:")
+		consolerw.Println("Available accounts:")
 		for idx, a := range oktaApplications {
 			if a.AppName == "amazon_aws" {
-				ConsoleReader.Println(fmt.Sprintf("[%d] %s", idx, a.Label))
+				consolerw.Println(fmt.Sprintf("[%d] %s", idx, a.Label))
 			}
 		}
 		var accountId int
-		if accountId, err = ConsoleReader.ReadInt("Select an account: "); err != nil {
+		if accountId, err = consolerw.ReadInt("Select an account: "); err != nil {
 			log.Fatal(err)
 		}
 		app = &oktaApplications[accountId]

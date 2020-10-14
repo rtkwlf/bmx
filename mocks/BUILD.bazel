@@ -3,15 +3,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
-        "awsServiceProvider.go",
         "consoleReader.go",
         "mokta.go",
     ],
     importpath = "github.com/jrbeverly/bmx/mocks",
     visibility = ["//visibility:public"],
-    deps = [
-        "//saml/identityProviders/okta:go_default_library",
-        "@com_github_aws_aws_sdk_go//aws:go_default_library",
-        "@com_github_aws_aws_sdk_go//service/sts:go_default_library",
-    ],
+    deps = ["//saml/identityProviders/okta:go_default_library"],
 )

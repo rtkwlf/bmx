@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/jrbeverly/bmx/console"
 	"github.com/jrbeverly/bmx/saml/identityProviders"
 
 	"github.com/aws/aws-sdk-go/service/sts"
@@ -41,16 +42,16 @@ func GetUserInfoFromCredentialProcessCmdOptions(printOptions CredentialProcessCm
 	return user
 }
 
-func CredentialProcess(idProvider identityProviders.IdentityProvider, printOptions CredentialProcessCmdOptions) string {
-	printOptions.User = getUserIfEmpty(printOptions.User)
+func CredentialProcess(idProvider identityProviders.IdentityProvider, awsProvider serviceProviders.ServiceProvider, consolerw console.ConsoleReader, printOptions CredentialProcessCmdOptions) string {
+	printOptions.User = getUserIfEmpty(consolerw, printOptions.User)
 	user := GetUserInfoFromCredentialProcessCmdOptions(printOptions)
 
-	saml, err := authenticate(user, idProvider)
+	saml, err := authenticate(user, idProvider, consolerw)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	creds := AwsServiceProvider.GetCredentials(saml, printOptions.Role)
+	creds := awsProvider.GetCredentials(saml, printOptions.Role)
 	command := credentialProcessCommand(printOptions, creds)
 	return command
 }

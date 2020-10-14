@@ -18,6 +18,7 @@ go_test(
     srcs = ["okta_test.go"],
     embed = [":go_default_library"],
     deps = [
+        "//mocks:go_default_library",
         "//saml/identityProviders/okta/file:go_default_library",
         "//saml/identityProviders/okta/mocks:go_default_library",
     ],

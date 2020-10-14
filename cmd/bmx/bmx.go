@@ -21,14 +21,19 @@ import (
 	"os"
 
 	"github.com/jrbeverly/bmx/config"
+	"github.com/jrbeverly/bmx/console"
 
 	"github.com/spf13/cobra"
 )
 
-var userConfig config.UserConfig
+var (
+	userConfig config.UserConfig
+	consolerw  *console.DefaultConsoleReader
+)
 
 func init() {
 	userConfig = (config.ConfigLoader{}).LoadConfigs()
+	consolerw = console.NewConsoleReader()
 }
 
 func main() {

@@ -20,20 +20,12 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/jrbeverly/bmx/console"
 	"github.com/jrbeverly/bmx/saml/identityProviders"
 
 	"github.com/aws/aws-sdk-go/service/sts"
 	"github.com/jrbeverly/bmx/saml/serviceProviders"
-	"github.com/jrbeverly/bmx/saml/serviceProviders/aws"
 )
-
-var (
-	AwsServiceProvider serviceProviders.ServiceProvider
-)
-
-func init() {
-	AwsServiceProvider = aws.NewAwsServiceProvider()
-}
 
 const (
 	Bash       = "bash"
@@ -62,16 +54,16 @@ func GetUserInfoFromPrintCmdOptions(printOptions PrintCmdOptions) serviceProvide
 	return user
 }
 
-func Print(idProvider identityProviders.IdentityProvider, printOptions PrintCmdOptions) string {
-	printOptions.User = getUserIfEmpty(printOptions.User)
+func Print(idProvider identityProviders.IdentityProvider, awsProvider serviceProviders.ServiceProvider, consolerw console.ConsoleReader, printOptions PrintCmdOptions) string {
+	printOptions.User = getUserIfEmpty(consolerw, printOptions.User)
 	user := GetUserInfoFromPrintCmdOptions(printOptions)
 
-	saml, err := authenticate(user, idProvider)
+	saml, err := authenticate(user, idProvider, consolerw)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	creds := AwsServiceProvider.GetCredentials(saml, printOptions.Role)
+	creds := awsProvider.GetCredentials(saml, printOptions.Role)
 	command := printCommand(printOptions, creds)
 	return command
 }

@@ -39,7 +39,7 @@ const (
 	applicationJson = "application/json"
 )
 
-func NewOktaClient(org string) (*OktaClient, error) {
+func NewOktaClient(org string, consolerw console.ConsoleReader) (*OktaClient, error) {
 	// All users of cookiejar should import "golang.org/x/net/publicsuffix"
 	jar, err := cookiejar.New(&cookiejar.Options{PublicSuffixList: publicsuffix.List})
 	if err != nil {
@@ -52,12 +52,10 @@ func NewOktaClient(org string) (*OktaClient, error) {
 
 	oktaSessionStorage := &file.OktaSessionStorage{}
 
-	consoleReader := &console.DefaultConsoleReader{}
-
 	client := &OktaClient{
 		HttpClient:    httpClient,
 		SessionCache:  oktaSessionStorage,
-		ConsoleReader: consoleReader,
+		ConsoleReader: consolerw,
 		Timeout:       2 * time.Second,
 		Retries:       15,
 	}

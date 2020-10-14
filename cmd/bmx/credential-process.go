@@ -7,6 +7,7 @@ import (
 	"github.com/jrbeverly/bmx/config"
 
 	"github.com/jrbeverly/bmx/saml/identityProviders/okta"
+	"github.com/jrbeverly/bmx/saml/serviceProviders/aws"
 
 	"github.com/jrbeverly/bmx"
 	"github.com/spf13/cobra"
@@ -34,14 +35,21 @@ var processCmd = &cobra.Command{
 	Short: "Credentials to awscli",
 	Long:  `Supply the credentials in compatible format`,
 	Run: func(cmd *cobra.Command, args []string) {
+		// Override the output device for the edge case
+		// of credential-process. Until a more compatible option is selected,
+		// this will be used.
+		consolerw.Tty = true
+
 		mergedOptions := mergeProcessOptions(userConfig, processOptions)
 
-		oktaClient, err := okta.NewOktaClient(mergedOptions.Org)
+		oktaClient, err := okta.NewOktaClient(mergedOptions.Org, consolerw)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		command := bmx.CredentialProcess(oktaClient, mergedOptions)
+		awsProvider := aws.NewAwsServiceProvider(consolerw)
+
+		command := bmx.CredentialProcess(oktaClient, awsProvider, consolerw, mergedOptions)
 		fmt.Println(command)
 	},
 }

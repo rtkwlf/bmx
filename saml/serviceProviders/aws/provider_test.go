@@ -48,7 +48,8 @@ func (s *stsMock) AssumeRoleWithSAML(input *sts.AssumeRoleWithSAMLInput) (*sts.A
 }
 
 func TestMonkey(t *testing.T) {
-	provider := awsService.NewAwsServiceProvider()
+	consolerw := mocks.ConsoleReaderMock{}
+	provider := awsService.NewAwsServiceProvider(consolerw)
 	provider.StsClient = &stsMock{}
 	provider.InputReader = mocks.ConsoleReaderMock{}
 

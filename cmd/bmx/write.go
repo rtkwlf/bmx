@@ -21,6 +21,7 @@ import (
 
 	"github.com/jrbeverly/bmx/config"
 	"github.com/jrbeverly/bmx/saml/identityProviders/okta"
+	"github.com/jrbeverly/bmx/saml/serviceProviders/aws"
 
 	"github.com/jrbeverly/bmx"
 	"github.com/spf13/cobra"
@@ -54,12 +55,13 @@ var writeCmd = &cobra.Command{
 	Long:  "Write to aws credential file",
 	Run: func(cmd *cobra.Command, args []string) {
 		mergedOptions := MergeWriteCmdOptions(userConfig, writeOptions)
-		oktaClient, err := okta.NewOktaClient(mergedOptions.Org)
+		oktaClient, err := okta.NewOktaClient(mergedOptions.Org, consolerw)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		bmx.Write(oktaClient, mergedOptions)
+		awsProvider := aws.NewAwsServiceProvider(consolerw)
+		bmx.Write(oktaClient, awsProvider, consolerw, mergedOptions)
 	},
 }
 
