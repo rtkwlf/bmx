@@ -20,12 +20,12 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/jrbeverly/bmx/config"
+	"github.com/rtkwlf/bmx/config"
 
-	"github.com/jrbeverly/bmx/saml/identityProviders/okta"
-	"github.com/jrbeverly/bmx/saml/serviceProviders/aws"
+	"github.com/rtkwlf/bmx/saml/identityProviders/okta"
+	"github.com/rtkwlf/bmx/saml/serviceProviders/aws"
 
-	"github.com/jrbeverly/bmx"
+	"github.com/rtkwlf/bmx"
 	"github.com/spf13/cobra"
 )
 

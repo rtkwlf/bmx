@@ -24,10 +24,10 @@ import (
 	"testing"
 	"time"
 
-	globalmocks "github.com/jrbeverly/bmx/mocks"
-	"github.com/jrbeverly/bmx/saml/identityProviders/okta"
-	"github.com/jrbeverly/bmx/saml/identityProviders/okta/file"
-	"github.com/jrbeverly/bmx/saml/identityProviders/okta/mocks"
+	globalmocks "github.com/rtkwlf/bmx/mocks"
+	"github.com/rtkwlf/bmx/saml/identityProviders/okta"
+	"github.com/rtkwlf/bmx/saml/identityProviders/okta/file"
+	"github.com/rtkwlf/bmx/saml/identityProviders/okta/mocks"
 )
 
 var (

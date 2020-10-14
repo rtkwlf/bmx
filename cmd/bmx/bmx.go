@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jrbeverly/bmx/config"
-	"github.com/jrbeverly/bmx/console"
+	"github.com/rtkwlf/bmx/config"
+	"github.com/rtkwlf/bmx/console"
 
 	"github.com/spf13/cobra"
 )

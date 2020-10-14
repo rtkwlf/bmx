@@ -18,7 +18,7 @@ changelog:
   skip: true
 release:
   github:
-    owner: jrbeverly
+    owner: rtkwlf
     name: bmx
   prerelease: auto
   name_template: "v{{.Version}}"

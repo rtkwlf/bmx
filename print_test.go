@@ -20,9 +20,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/jrbeverly/bmx"
-	"github.com/jrbeverly/bmx/mocks"
-	awsmocks "github.com/jrbeverly/bmx/saml/serviceProviders/aws/mocks"
+	"github.com/rtkwlf/bmx"
+	"github.com/rtkwlf/bmx/mocks"
+	awsmocks "github.com/rtkwlf/bmx/saml/serviceProviders/aws/mocks"
 )
 
 func assertAwsTokenEnv(t *testing.T, output string) {
