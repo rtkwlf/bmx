@@ -87,10 +87,11 @@ Usage:
    [command]
 
 Available Commands:
-  help        Help about any command
-  print       Print to screen
-  version     Print BMX version and exit
-  write       Write to aws credential file
+  credential-process Credentials to awscli
+  help               Help about any command
+  print              Print to screen
+  version            Print BMX version and exit
+  write              Write to aws credential file
 
 Flags:
   -h, --help   help for this command

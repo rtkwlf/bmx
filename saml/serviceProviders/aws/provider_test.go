@@ -26,8 +26,8 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 
-	awsService "github.com/jrbeverly/bmx/saml/serviceProviders/aws"
 	"github.com/aws/aws-sdk-go/service/sts"
+	awsService "github.com/jrbeverly/bmx/saml/serviceProviders/aws"
 )
 
 type stsMock struct {
