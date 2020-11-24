@@ -98,21 +98,21 @@ func (d ConfigLoader) WorkingDir() string {
 		d.WorkingDirectory, _ = os.Getwd()
 	}
 	return d.WorkingDirectory
-
 }
 
 // findFile takes a full path to a file and will recursively search up the directory structure until it finds a file of the
 // desired name or it reaches the root directory. If it cannot find the file, it will return an empty string.
 func findFile(configPath string) string {
 	if info, err := os.Stat(configPath); os.IsNotExist(err) || info.IsDir() {
-		parentDir := path.Dir(path.Dir(filepath.ToSlash(configPath)))
-		if parentDir == "." {
+		configDir := filepath.Dir(configPath)
+		parentDir := filepath.Dir(configDir)
+		if parentDir == "." || configDir == string(filepath.Separator) {
 			return ""
 		}
 
-		fileName := path.Base(configPath)
+		fileName := filepath.Base(configPath)
 
-		return findFile(path.Join(parentDir, fileName))
+		return findFile(filepath.Join(parentDir, fileName))
 	}
 
 	return configPath
