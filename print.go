@@ -40,6 +40,7 @@ type PrintCmdOptions struct {
 	Password string
 	Role     string
 	Output   string
+	AssumeRole string
 }
 
 func GetUserInfoFromPrintCmdOptions(printOptions PrintCmdOptions) serviceProviders.UserInfo {
@@ -64,6 +65,11 @@ func Print(idProvider identityProviders.IdentityProvider, awsProvider servicePro
 	}
 
 	creds := awsProvider.GetCredentials(saml, printOptions.Role)
+
+	if printOptions.AssumeRole != "" {
+		creds, err = awsProvider.AssumeRole(*creds, printOptions.AssumeRole)
+	}
+
 	command := printCommand(printOptions, creds)
 	return command
 }

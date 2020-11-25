@@ -36,6 +36,7 @@ func init() {
 	printCmd.Flags().StringVar(&printOptions.User, "user", "", "the user to authenticate with")
 	printCmd.Flags().StringVar(&printOptions.Account, "account", "", "the account name to auth against")
 	printCmd.Flags().StringVar(&printOptions.Role, "role", "", "the desired role to assume")
+	printCmd.Flags().StringVar(&printOptions.AssumeRole, "assume", "", "the desired role to assume after first auth")
 	printCmd.Flags().BoolVar(&printOptions.NoMask, "nomask", false, "set to not mask the password. this helps with debugging.")
 	printCmd.Flags().StringVar(&printOptions.Output, "output", "", "the output format [bash|powershell]")
 
@@ -76,6 +77,9 @@ func mergePrintOptions(uc config.UserConfig, pc bmx.PrintCmdOptions) bmx.PrintCm
 	}
 	if pc.Role == "" {
 		pc.Role = uc.Role
+	}
+	if pc.AssumeRole == "" {
+		pc.AssumeRole = uc.AssumeRole
 	}
 
 	return pc
