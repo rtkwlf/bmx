@@ -119,6 +119,9 @@ func (o *OktaClient) Authenticate(username, password, org string) (string, error
 
 	oktaAuthResponse := &OktaAuthResponse{}
 	z, err := ioutil.ReadAll(authResponse.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
 	err = json.Unmarshal(z, &oktaAuthResponse)
 	if err != nil {
 		log.Fatal(err)
@@ -147,12 +150,18 @@ func (o *OktaClient) AuthenticateFromCache(username, org string) (string, bool) 
 	url := o.BaseUrl.ResolveReference(rel)
 
 	meRequest, err := http.NewRequest("GET", url.String(), nil)
+	if err != nil {
+		return "", false
+	}
 	meResponse, err := o.HttpClient.Do(meRequest)
 	if err != nil {
 		return "", false
 	}
 	var me OktaMeResponse
 	b, err := ioutil.ReadAll(meResponse.Body)
+	if err != nil {
+		return "", false
+	}
 	err = json.Unmarshal(b, &me)
 	if err != nil {
 		return "", false
@@ -165,12 +174,18 @@ func (o *OktaClient) ListApplications(userId string) ([]OktaAppLink, error) {
 	url := o.BaseUrl.ResolveReference(rel)
 
 	listApplicationRequest, err := http.NewRequest("GET", url.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 	listApplicationsResponse, err := o.HttpClient.Do(listApplicationRequest)
 	if err != nil {
 		return nil, err
 	}
 	var oktaApplications []OktaAppLink
 	b, err := ioutil.ReadAll(listApplicationsResponse.Body)
+	if err != nil {
+		return nil, err
+	}
 	err = json.Unmarshal(b, &oktaApplications)
 	if err != nil {
 		return nil, err
@@ -192,10 +207,19 @@ func (o *OktaClient) startSession(sessionToken string) (*OktaSessionResponse, er
 		SessionToken: sessionToken,
 	}
 	b, err := json.Marshal(oktaSessionsRequest)
+	if err != nil {
+		return nil, err
+	}
 	sessionResponse, err := o.HttpClient.Post(url.String(), applicationJson, bytes.NewReader(b))
+	if err != nil {
+		return nil, err
+	}
 
 	oktaSessionResponse := &OktaSessionResponse{}
 	b, err = ioutil.ReadAll(sessionResponse.Body)
+	if err != nil {
+		return nil, err
+	}
 	err = json.Unmarshal(b, oktaSessionResponse)
 	if err != nil {
 		return nil, err
