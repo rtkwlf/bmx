@@ -38,7 +38,7 @@ func (s *stsMock) AssumeRoleWithSAML(input *sts.AssumeRoleWithSAMLInput) (*sts.A
 	out := &sts.AssumeRoleWithSAMLOutput{
 		Credentials: &sts.Credentials{
 			AccessKeyId:     aws.String("access_key_id"),
-			SecretAccessKey: aws.String("secrest_access_key"),
+			SecretAccessKey: aws.String("secret_access_key"),
 			SessionToken:    aws.String("session_token"),
 			Expiration:      aws.Time(time.Now().Add(time.Hour * 8)),
 		},
