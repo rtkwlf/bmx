@@ -71,7 +71,7 @@ func TestAuthenticateFromCacheWithExistingSession(t *testing.T) {
 	defer closeServer()
 
 	sessions := []file.OktaSessionCache{
-		file.OktaSessionCache{
+		{
 			Userid:    "blah",
 			Org:       "org",
 			SessionId: "Id",
@@ -96,7 +96,7 @@ func TestAuthenticateFromCacheWithExpiredExistingSession(t *testing.T) {
 	defer closeServer()
 
 	sessions := []file.OktaSessionCache{
-		file.OktaSessionCache{
+		{
 			Userid:    "blah",
 			Org:       "org",
 			SessionId: "Id",
