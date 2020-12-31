@@ -27,12 +27,19 @@ var commit string
 
 func init() {
 	rootCmd.AddCommand(versionCmd)
+	if version == "" {
+		version = "nover"
+	}
 }
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print BMX version and exit",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("bmx/%s git/%s\n", version, commit)
+		if commit != "" {
+			fmt.Printf("bmx/%s git/%s\n", version, commit)
+		} else {
+			fmt.Println("bmx/nostamp")
+		}
 	},
 }
