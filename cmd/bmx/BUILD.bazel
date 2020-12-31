@@ -25,5 +25,8 @@ go_binary(
     name = "bmx",
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
-    x_defs = {"version": "{STABLE_GIT_COMMIT}"},
+    x_defs = {
+        "version": "{BMX_VERSION}",
+        "commit": "{STABLE_GIT_COMMIT}",
+    },
 )
