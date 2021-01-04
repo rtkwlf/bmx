@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "bmx.go",
         "credential-process.go",
+        "login.go",
         "print.go",
         "version.go",
         "write.go",

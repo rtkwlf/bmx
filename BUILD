@@ -9,6 +9,7 @@ go_library(
     srcs = [
         "console.go",
         "credential-process.go",
+        "login.go",
         "print.go",
         "print_unix.go",
         "print_windows.go",
