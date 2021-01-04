@@ -1,11 +1,12 @@
 package bmx
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/rtkwlf/bmx/console"
-	"github.com/rtkwlf/bmx/saml/identityProviders"
 
+	"github.com/rtkwlf/bmx/saml/identityProviders/okta"
 	"github.com/rtkwlf/bmx/saml/serviceProviders"
 )
 
@@ -31,7 +32,7 @@ func GetUserInfoFromLoginCmdOptions(loginOptions LoginCmdOptions) serviceProvide
 	return user
 }
 
-func Login(idProvider identityProviders.IdentityProvider, consolerw console.ConsoleReader, loginOptions LoginCmdOptions) string {
+func Login(idProvider *okta.OktaClient, consolerw console.ConsoleReader, loginOptions LoginCmdOptions) string {
 	loginOptions.User = getUserIfEmpty(consolerw, loginOptions.User)
 	user := GetUserInfoFromLoginCmdOptions(loginOptions)
 
@@ -39,5 +40,10 @@ func Login(idProvider identityProviders.IdentityProvider, consolerw console.Cons
 	if err != nil {
 		log.Fatal(err)
 	}
-	return "Session created."
+
+	session, ok := idProvider.GetCachedOktaSession(loginOptions.User, loginOptions.Org)
+	if !ok {
+		return fmt.Sprintf("Failed to create session for %s", loginOptions.User)
+	}
+	return fmt.Sprintf("Session for %s expires at %s", session.Userid, session.ExpiresAt)
 }

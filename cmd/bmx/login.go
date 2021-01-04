@@ -7,7 +7,6 @@ import (
 	"github.com/rtkwlf/bmx/config"
 
 	"github.com/rtkwlf/bmx/saml/identityProviders/okta"
-	"github.com/rtkwlf/bmx/saml/serviceProviders/aws"
 
 	"github.com/rtkwlf/bmx"
 	"github.com/spf13/cobra"
@@ -35,16 +34,15 @@ var loginCmd = &cobra.Command{
 	Short: "Create a session",
 	Long:  `If logged out, create a new session`,
 	Run: func(cmd *cobra.Command, args []string) {
-		mergedOptions := mergePrintOptions(userConfig, loginOptions)
+		mergedOptions := mergeLoginOptions(userConfig, loginOptions)
 
 		oktaClient, err := okta.NewOktaClient(mergedOptions.Org, consolerw)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		awsProvider := aws.NewAwsServiceProvider(consolerw)
-		command := bmx.Print(oktaClient, awsProvider, consolerw, mergedOptions)
-		fmt.Println(command)
+		response := bmx.Login(oktaClient, consolerw, mergedOptions)
+		fmt.Println(response)
 	},
 }
 
