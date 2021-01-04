@@ -139,12 +139,12 @@ func (o *OktaClient) Authenticate(username, password, org string) (string, error
 }
 
 func (o *OktaClient) AuthenticateFromCache(username, org string) (string, bool) {
-	sessionID, ok := o.GetCachedOktaSession(username, org)
+	session, ok := o.GetCachedOktaSession(username, org)
 	if !ok {
 		return "", false
 	}
 
-	o.setSessionId(sessionID)
+	o.setSessionId(session.SessionId)
 
 	rel, _ := url.Parse(fmt.Sprintf("users/me"))
 	url := o.BaseUrl.ResolveReference(rel)
@@ -243,18 +243,19 @@ func (o *OktaClient) CacheOktaSession(userId, org, sessionId, expiresAt string) 
 	o.SessionCache.SaveSessions(existingSessions)
 }
 
-func (o *OktaClient) GetCachedOktaSession(userid, org string) (string, bool) {
+func (o *OktaClient) GetCachedOktaSession(userid, org string) (file.OktaSessionCache, bool) {
+	var result file.OktaSessionCache
 	oktaSessions, err := readOktaCacheSessionsFile(o)
 	if err != nil {
-		return "", false
+		return result, false
 	}
 	for _, oktaSession := range oktaSessions {
 		if oktaSession.Userid == userid &&
 			oktaSession.Org == org {
-			return oktaSession.SessionId, true
+			return oktaSession, true
 		}
 	}
-	return "", false
+	return result, false
 }
 
 func readOktaCacheSessionsFile(o *OktaClient) ([]file.OktaSessionCache, error) {
