@@ -3,6 +3,7 @@ package bmx
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/rtkwlf/bmx/console"
 
@@ -45,5 +46,10 @@ func Login(idProvider *okta.OktaClient, consolerw console.ConsoleReader, loginOp
 	if !ok {
 		return fmt.Sprintf("Failed to create session for %s", loginOptions.User)
 	}
-	return fmt.Sprintf("Session for %s expires at %s", session.Userid, session.ExpiresAt)
+
+	expiresAt, err := time.Parse(time.RFC3339, session.ExpiresAt)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return fmt.Sprintf("Session expires in %s", time.Until(expiresAt).Round(time.Second))
 }
