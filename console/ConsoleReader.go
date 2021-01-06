@@ -109,6 +109,10 @@ func (r *DefaultConsoleReader) Option(prompt string, options []string) (int, err
 		return -1, fmt.Errorf("No options available for selection")
 	}
 
+	if len(options) == 1 {
+		return 0, nil
+	}
+
 	var selection int
 	for idx, option := range options {
 		r.Println(fmt.Sprintf("[%d] %s", idx, option))
