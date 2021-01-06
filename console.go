@@ -65,22 +65,6 @@ func getPassword(consolerw console.ConsoleReader, noMask bool) string {
 	return pass
 }
 
-func selectPrompt(prompt string, options []string, consolerw console.ConsoleReader) (int, error) {
-	if len(options) < 1 {
-		return -1, fmt.Errorf("No options available for selection")
-	}
-
-	var selection int
-	for idx, option := range options {
-		consolerw.Println(fmt.Sprintf("[%d] %s", idx, option))
-	}
-	selection, err := consolerw.ReadInt(prompt)
-	if err != nil {
-		return -1, err
-	}
-	return selection, nil
-}
-
 func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.IdentityProvider, consolerw console.ConsoleReader) (string, error) {
 	var userID string
 	var ok bool
@@ -112,7 +96,7 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 		}
 
 		consolerw.Println("Available accounts:")
-		accountID, err := selectPrompt("Select an account: ", appLabels, consolerw)
+		accountID, err := consolerw.Option("Select an account: ", appLabels, consolerw)
 		if err != nil {
 			log.Fatal(err)
 		}
