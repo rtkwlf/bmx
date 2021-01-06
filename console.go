@@ -87,7 +87,7 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 		log.Fatal(fmt.Errorf("No AWS okta applinks were found for userid:%s", userID))
 	}
 
-	app, found := findApp(user.Account, oktaApplications)
+	app, found := FindAppByLabel(user.Account, oktaApplications)
 	if found {
 		return oktaClient.GetSaml(*app)
 	}
@@ -111,10 +111,10 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 	return oktaClient.GetSaml(*app)
 }
 
-func findApp(app string, apps []okta.OktaAppLink) (foundApp *okta.OktaAppLink, found bool) {
-	for _, v := range apps {
-		if strings.ToLower(v.Label) == strings.ToLower(app) {
-			return &v, true
+func FindAppByLabel(name string, applinks []okta.OktaAppLink) (result *okta.OktaAppLink, ok bool) {
+	for _, app := range applinks {
+		if strings.EqualFold(app.Label, name) {
+			return &app, true
 		}
 	}
 
