@@ -96,7 +96,7 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 		}
 
 		consolerw.Println("Available accounts:")
-		accountID, err := consolerw.Option("Select an account: ", appLabels, consolerw)
+		accountID, err := consolerw.Option("Select an account: ", appLabels)
 		if err != nil {
 			log.Fatal(err)
 		}
