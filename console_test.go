@@ -18,9 +18,10 @@ func TestFindAppByLabels(t *testing.T) {
 		{"samecase", "TestApp3", "TestApp3", true},
 		{"lowercase", "testapp3", "TestApp3", true},
 		{"uppercase", "TESTAPP3", "TestApp3", true},
-		{"closebutnot", "TestAppp3", "TestApp3", false},
-		{"differentnumber", "TestApp2", "TestApp3", false},
-		{"emptystring", "", "TestApp3", false},
+		{"close but not", "TestAppp3", "TestApp3", false},
+		{"different number", "TestApp2", "TestApp3", false},
+		{"empty string", "", "TestApp3", false},
+		{"punctuation", "aws - payer", "AWS - Payer", true},
 	}
 
 	dataset := []okta.OktaAppLink{
