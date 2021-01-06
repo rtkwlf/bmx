@@ -19,7 +19,7 @@ func init() {
 }
 
 var configCmd = &cobra.Command{
-	Use:   "config",
+	Use:   "ini-config",
 	Short: "Print a minimal configuration for use",
 	Run: func(cmd *cobra.Command, args []string) {
 		cfg := ini.Empty()
