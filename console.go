@@ -89,11 +89,11 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 
 	app, found := FindAppByLabel(user.Account, oktaApplications)
 	if found {
-		return oktaClient.GetSaml(*app)
+		return oktaClient.GetSaml(app)
 	}
 
 	if len(oktaApplications) == 1 {
-		app = &oktaApplications[0]
+		app = oktaApplications[0]
 	} else {
 		appLabels := []string{}
 		for _, app := range oktaApplications {
@@ -105,18 +105,20 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 		if err != nil {
 			log.Fatal(err)
 		}
-		app = &oktaApplications[accountID]
+		app = oktaApplications[accountID]
 	}
 
-	return oktaClient.GetSaml(*app)
+	return oktaClient.GetSaml(app)
 }
 
-func FindAppByLabel(name string, applinks []okta.OktaAppLink) (result *okta.OktaAppLink, ok bool) {
+func FindAppByLabel(name string, applinks []okta.OktaAppLink) (result okta.OktaAppLink, ok bool) {
 	for _, app := range applinks {
 		if strings.EqualFold(app.Label, name) {
-			return &app, true
+			result = app
+			ok = true
+			break
 		}
 	}
 
-	return nil, false
+	return result, ok
 }

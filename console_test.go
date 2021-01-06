@@ -8,19 +8,44 @@ import (
 )
 
 func TestFindAppByLabels(t *testing.T) {
-	name := "nameToFind"
-	expected := okta.OktaAppLink{Label: name}
-	applinks := []okta.OktaAppLink{
-		okta.OktaAppLink{Label: "myname"},
-		okta.OktaAppLink{Label: "myname"},
-		expected,
-	}
-	actual, ok := bmx.FindAppByLabel(name, applinks)
-	if !ok {
-		t.Errorf("Failed to find app, got: %v, expected %v", ok, true)
+	// Need 2 things, name of label and name of OktaApp
+	var expectedLabels = []struct {
+		testName    string
+		searchName  string
+		targetLabel string
+		isFound     bool
+	}{
+		{"samecase", "TestApp3", "TestApp3", true},
+		{"lowercase", "testapp3", "TestApp3", true},
+		{"uppercase", "TESTAPP3", "TestApp3", true},
+		{"closebutnot", "TestAppp3", "TestApp3", false},
+		{"differentnumber", "TestApp2", "TestApp3", false},
+		{"emptystring", "", "TestApp3", false},
 	}
 
-	if name != actual.Label {
-		t.Errorf("Label is incorrect, got: %s, expected %s", actual.Label, expected.Label)
+	dataset := []okta.OktaAppLink{
+		okta.OktaAppLink{Label: "awsAppTesting1"},
+		okta.OktaAppLink{Label: "myTestApp2"},
+		okta.OktaAppLink{Label: "testingForAws"},
+		okta.OktaAppLink{Label: "MyAwsApp"},
+		okta.OktaAppLink{Label: "NotAnAwsApp"},
+	}
+
+	for _, test := range expectedLabels {
+		t.Run(test.testName, func(t *testing.T) {
+			expected := okta.OktaAppLink{Label: test.targetLabel}
+			applinks := append(dataset, expected)
+
+			actual, ok := bmx.FindAppByLabel(test.searchName, applinks)
+			if ok && !test.isFound {
+				t.Errorf("Found result of: %s, when expected nothing to be found", actual.Label)
+			} else if !ok && test.isFound {
+				t.Errorf("Did not find: %s, when result: %s was expected", test.searchName, test.targetLabel)
+			}
+
+			if ok && actual.Label != expected.Label {
+				t.Errorf("Label is incorrect, got: %s, expected %s", actual.Label, expected.Label)
+			}
+		})
 	}
 }
