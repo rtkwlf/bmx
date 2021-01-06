@@ -66,6 +66,10 @@ func getPassword(consolerw console.ConsoleReader, noMask bool) string {
 }
 
 func selectPrompt(prompt string, options []string, consolerw console.ConsoleReader) (int, error) {
+	if len(options) < 1 {
+		return -1, fmt.Errorf("No options available for selection")
+	}
+
 	var selection int
 	for idx, option := range options {
 		consolerw.Println(fmt.Sprintf("[%d] %s", idx, option))
@@ -93,6 +97,10 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 	oktaApplications, err := oktaClient.ListApplications(userID)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	if len(oktaApplications) < 1 {
+		log.Fatal(fmt.Errorf("No AWS okta applinks were found for userid:%s", userID))
 	}
 
 	app, found := findApp(user.Account, oktaApplications)
