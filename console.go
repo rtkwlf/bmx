@@ -65,6 +65,18 @@ func getPassword(consolerw console.ConsoleReader, noMask bool) string {
 	return pass
 }
 
+func selectPrompt(prompt string, options []string, consolerw console.ConsoleReader) (int, error) {
+	var selection int
+	for idx, option := range options {
+		consolerw.Println(fmt.Sprintf("[%d] %s", idx, option))
+	}
+	selection, err := consolerw.ReadInt(prompt)
+	if err != nil {
+		return -1, err
+	}
+	return selection, nil
+}
+
 func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.IdentityProvider, consolerw console.ConsoleReader) (string, error) {
 	var userID string
 	var ok bool
@@ -85,18 +97,19 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 
 	app, found := findApp(user.Account, oktaApplications)
 	if !found {
-		// select an account
-		consolerw.Println("Available accounts:")
-		for idx, a := range oktaApplications {
-			if a.AppName == "amazon_aws" {
-				consolerw.Println(fmt.Sprintf("[%d] %s", idx, a.Label))
-			}
+		// format account labels
+		appLabels := []string{}
+		for _, app := range oktaApplications {
+			appLabels = append(appLabels, app.Label)
 		}
-		var accountId int
-		if accountId, err = consolerw.ReadInt("Select an account: "); err != nil {
+
+		consolerw.Println("Available accounts:")
+		accountID, err := selectPrompt("Select an account: ", appLabels, consolerw)
+		if err != nil {
 			log.Fatal(err)
 		}
-		app = &oktaApplications[accountId]
+
+		app = &oktaApplications[accountID]
 	}
 
 	return oktaClient.GetSaml(*app)
