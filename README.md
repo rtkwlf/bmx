@@ -35,7 +35,7 @@ load this file automatically and populate the parameters where appropriate.
 | account | string | `-` | The AWS account to retrieve credentials for. |
 | role | string | `-` | The AWS role to assume. |
 | profile | string | `-` | The profile to `write` in `~/.aws/credentials`. |
-| factor | `enum(push|token:software:totp)` | `-` | The desired multi-factor authentication factor-type to use. |
+| factor | `(push,token:software:totp)` | `-` | The desired multi-factor authentication factor-type to use. |
 
 ### Project Scoped Configurations
 
