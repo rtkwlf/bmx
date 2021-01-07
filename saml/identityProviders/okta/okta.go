@@ -169,7 +169,7 @@ func (o *OktaClient) AuthenticateFromCache(username, org string) (string, bool) 
 	return me.Id, true
 }
 
-func (o *OktaClient) ListApplications(userId string) ([]OktaAppLink, error) {
+func (o *OktaClient) ListAppLinks(userId string) ([]OktaAppLink, error) {
 	rel, _ := url.Parse(fmt.Sprintf("users/%s/appLinks", userId))
 	url := o.BaseUrl.ResolveReference(rel)
 
@@ -192,6 +192,21 @@ func (o *OktaClient) ListApplications(userId string) ([]OktaAppLink, error) {
 	}
 
 	return oktaApplications, nil
+}
+
+func (o *OktaClient) ListApplications(userId string) ([]OktaAppLink, error) {
+	oktaApplications, err := o.ListAppLinks(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	applications := []OktaAppLink{}
+	for _, app := range oktaApplications {
+		if app.AppName == "amazon_aws" {
+			applications = append(applications, app)
+		}
+	}
+	return applications, nil
 }
 
 func (o *OktaClient) startSession(sessionToken string) (*OktaSessionResponse, error) {

@@ -83,20 +83,29 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 		log.Fatal(err)
 	}
 
+	if len(oktaApplications) < 1 {
+		log.Fatal(fmt.Errorf("No AWS okta applinks were found for userid:%s", userID))
+	}
+
 	app, found := findApp(user.Account, oktaApplications)
-	if !found {
-		// select an account
-		consolerw.Println("Available accounts:")
-		for idx, a := range oktaApplications {
-			if a.AppName == "amazon_aws" {
-				consolerw.Println(fmt.Sprintf("[%d] %s", idx, a.Label))
-			}
+	if found {
+		return oktaClient.GetSaml(*app)
+	}
+
+	if len(oktaApplications) == 1 {
+		app = &oktaApplications[0]
+	} else {
+		appLabels := []string{}
+		for _, app := range oktaApplications {
+			appLabels = append(appLabels, app.Label)
 		}
-		var accountId int
-		if accountId, err = consolerw.ReadInt("Select an account: "); err != nil {
+
+		consolerw.Println("Available accounts:")
+		accountID, err := consolerw.Option("Select an account: ", appLabels)
+		if err != nil {
 			log.Fatal(err)
 		}
-		app = &oktaApplications[accountId]
+		app = &oktaApplications[accountID]
 	}
 
 	return oktaClient.GetSaml(*app)
