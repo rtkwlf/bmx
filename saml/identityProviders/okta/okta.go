@@ -412,6 +412,8 @@ func (o *OktaClient) doMfa(oktaAuthResponse *OktaAuthResponse, factor string) er
 		err = o.verifyTotpMfa(oktaAuthResponse, selectedFactor)
 	} else if selectedFactor.FactorType == "push" {
 		err = o.verifyPushMfa(oktaAuthResponse, selectedFactor)
+	} else {
+		err = fmt.Errorf("Selected MFA factor %s is not supported", selectedFactor.FactorType)
 	}
 	if err != nil {
 		log.Fatal(err)
