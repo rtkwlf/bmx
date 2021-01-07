@@ -410,14 +410,11 @@ func (o *OktaClient) doMfa(oktaAuthResponse *OktaAuthResponse, factor string) er
 	// mapped action form (e.g. actions[factortype] => perform action)
 	if selectedFactor.FactorType == "token:software:totp" {
 		err = o.verifyTotpMfa(oktaAuthResponse, selectedFactor)
-		if err != nil {
-			log.Fatal(err)
-		}
 	} else if selectedFactor.FactorType == "push" {
 		err = o.verifyPushMfa(oktaAuthResponse, selectedFactor)
-		if err != nil {
-			log.Fatal(err)
-		}
+	}
+	if err != nil {
+		log.Fatal(err)
 	}
 	return nil
 }
