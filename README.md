@@ -27,12 +27,15 @@ load this file automatically and populate the parameters where appropriate.
 
 ### Configuration Parameters
 
-* allow_project_configs (default=false) : Setting this to true will enable the project scoped configuration feature described below.
-* org : Specify the Okta org to connect to here. This value sets the api base URL for Okta calls (https://{org}.okta.com/).
-* user : This is the username used when connecting to the identity provider.
-* account : The AWS account to retrieve credentials for.
-* role : The AWS role to assume.
-* profile : The profile to `write` in `~/.aws/credentials`.
+|name|type|default|description|
+| --- | --- | --- | --- |
+| allow_project_configs | bool | `false` | Setting this to true will enable the project scoped configuration feature described below. |
+| org | string | `-` | Specify the Okta org to connect to here. This value sets the api base URL for Okta calls (https://{org}.okta.com/). |
+| user | string | `-` | This is the username used when connecting to the identity provider. |
+| account | string | `-` | The AWS account to retrieve credentials for. |
+| role | string | `-` | The AWS role to assume. |
+| profile | string | `-` | The profile to `write` in `~/.aws/credentials`. |
+| factor | `(push,token:software:totp)` | `-` | The desired multi-factor authentication factor-type to use. |
 
 ### Project Scoped Configurations
 
