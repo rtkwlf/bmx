@@ -352,6 +352,10 @@ func (o *OktaClient) verifyTotpMfa(oktaAuthResponse *OktaAuthResponse, selectedF
 		return err
 	}
 
+	if oktaAuthResponse.Status != "SUCCESS" {
+		return fmt.Errorf("Failed totp challenge for code: %s", code)
+	}
+
 	return nil
 }
 
