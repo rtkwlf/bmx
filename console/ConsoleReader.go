@@ -101,6 +101,7 @@ func (r *DefaultConsoleReader) ReadPassword(prompt string) (string, error) {
 		return "", err
 	}
 
+	r.Println("")
 	return string(pass[:]), nil
 }
 
