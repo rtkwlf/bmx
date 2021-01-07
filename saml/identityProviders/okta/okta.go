@@ -88,7 +88,7 @@ func (o *OktaClient) GetSaml(appLink OktaAppLink) (string, error) {
 	return GetSaml(appResponse.Body)
 }
 
-func (o *OktaClient) Authenticate(username, password, org string) (string, error) {
+func (o *OktaClient) Authenticate(username, password, org, factor string) (string, error) {
 	rel, err := url.Parse("authn")
 	if err != nil {
 		return "", err
@@ -127,7 +127,7 @@ func (o *OktaClient) Authenticate(username, password, org string) (string, error
 		log.Fatal(err)
 	}
 
-	if err := o.doMfa(oktaAuthResponse); err != nil {
+	if err := o.doMfa(oktaAuthResponse, factor); err != nil {
 		log.Fatal(err)
 	}
 
@@ -355,47 +355,68 @@ func (o *OktaClient) verifyTotpMfa(oktaAuthResponse *OktaAuthResponse, selectedF
 	return nil
 }
 
-func (o *OktaClient) doMfa(oktaAuthResponse *OktaAuthResponse) error {
-	if oktaAuthResponse.Status == "MFA_REQUIRED" {
-		o.ConsoleReader.Println("MFA Required")
-		for idx, factor := range oktaAuthResponse.Embedded.Factors {
-			o.ConsoleReader.Println(fmt.Sprintf("%d - %s", idx, factor.FactorType))
-		}
+func (o *OktaClient) selectFactor(factors []OktaAuthFactors, desiredFactor string) (OktaAuthFactors, error) {
+	if len(factors) == 1 {
+		return factors[0], nil
+	}
 
-		var mfaIdx int
-		var err error
-		if mfaIdx, err = o.ConsoleReader.ReadInt("Select an available MFA option: "); err != nil {
-			log.Fatal(err)
+	mfaLabels := []string{}
+	for idx, factor := range factors {
+		mfaLabels = append(mfaLabels, factor.FactorType)
+		if desiredFactor != "" && strings.EqualFold(factor.FactorType, desiredFactor) {
+			return factors[idx], nil
 		}
-		selectedFactor := oktaAuthResponse.Embedded.Factors[mfaIdx]
-		vurl := oktaAuthResponse.Embedded.Factors[mfaIdx].Links.Verify.Url
+	}
 
-		body := fmt.Sprintf(`{"stateToken":"%s"}`, oktaAuthResponse.StateToken)
-		authResponse, err := o.HttpClient.Post(vurl, "application/json", strings.NewReader(body))
+	o.ConsoleReader.Println("MFA Required:")
+	mfaIdx, err := o.ConsoleReader.Option("Select an available MFA option: ", mfaLabels)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return factors[mfaIdx], nil
+}
+
+func (o *OktaClient) doMfa(oktaAuthResponse *OktaAuthResponse, factor string) error {
+	if oktaAuthResponse.Status != "MFA_REQUIRED" {
+		return nil
+	}
+
+	if len(oktaAuthResponse.Embedded.Factors) == 0 {
+		return fmt.Errorf("No MFA factors available with required MFA")
+	}
+
+	selectedFactor, err := o.selectFactor(oktaAuthResponse.Embedded.Factors, factor)
+	if err != nil {
+		log.Fatal(err)
+	}
+	vurl := selectedFactor.Links.Verify.Url
+
+	body := fmt.Sprintf(`{"stateToken":"%s"}`, oktaAuthResponse.StateToken)
+	authResponse, err := o.HttpClient.Post(vurl, "application/json", strings.NewReader(body))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	z, _ := ioutil.ReadAll(authResponse.Body)
+	err = json.Unmarshal(z, &oktaAuthResponse)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// This is a rough outline and can be better organized. For now
+	// I'm comfortable with adding in this kind of handling for
+	// multiple MFA factors. I'd like for this to be done in a
+	// mapped action form (e.g. actions[factortype] => perform action)
+	if selectedFactor.FactorType == "token:software:totp" {
+		err = o.verifyTotpMfa(oktaAuthResponse, selectedFactor)
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		z, _ := ioutil.ReadAll(authResponse.Body)
-		err = json.Unmarshal(z, &oktaAuthResponse)
+	} else if selectedFactor.FactorType == "push" {
+		err = o.verifyPushMfa(oktaAuthResponse, selectedFactor)
 		if err != nil {
 			log.Fatal(err)
-		}
-
-		// This is a rough outline and can be better organized. For now
-		// I'm comfortable with adding in this kind of handling for
-		// multiple MFA factors. I'd like for this to be done in a
-		// mapped action form (e.g. actions[factortype] => perform action)
-		if selectedFactor.FactorType == "token:software:totp" {
-			err = o.verifyTotpMfa(oktaAuthResponse, selectedFactor)
-			if err != nil {
-				log.Fatal(err)
-			}
-		} else if selectedFactor.FactorType == "push" {
-			err = o.verifyPushMfa(oktaAuthResponse, selectedFactor)
-			if err != nil {
-				log.Fatal(err)
-			}
 		}
 	}
 	return nil

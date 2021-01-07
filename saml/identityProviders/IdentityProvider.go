@@ -22,7 +22,7 @@ import (
 
 type IdentityProvider interface {
 	AuthenticateFromCache(username, org string) (string, bool)
-	Authenticate(username, password, org string) (string, error)
+	Authenticate(username, password, org, factor string) (string, error)
 	ListApplications(userId string) ([]okta.OktaAppLink, error)
 	GetSaml(appLink okta.OktaAppLink) (string, error)
 }

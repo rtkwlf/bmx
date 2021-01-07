@@ -26,7 +26,7 @@ type Mokta struct {
 	BaseUrl *url.URL
 }
 
-func (m *Mokta) Authenticate(username, password, org string) (string, error) {
+func (m *Mokta) Authenticate(username, password, org, factor string) (string, error) {
 	return "1", nil
 }
 
