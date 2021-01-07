@@ -72,7 +72,7 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 	if !ok {
 		user.Password = getPassword(consolerw, user.NoMask)
 		var err error
-		userID, err = oktaClient.Authenticate(user.User, user.Password, user.Org)
+		userID, err = oktaClient.Authenticate(user.User, user.Password, user.Org, user.Factor)
 		if err != nil {
 			log.Fatal(err)
 		}

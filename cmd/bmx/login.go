@@ -58,6 +58,9 @@ func mergeLoginOptions(uc config.UserConfig, pc bmx.LoginCmdOptions) bmx.LoginCm
 	if pc.Role == "" {
 		pc.Role = uc.Role
 	}
+	if pc.Factor == "" {
+		pc.Factor = uc.Factor
+	}
 
 	return pc
 }

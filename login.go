@@ -18,6 +18,7 @@ type LoginCmdOptions struct {
 	NoMask   bool
 	Password string
 	Role     string
+	Factor   string
 }
 
 func GetUserInfoFromLoginCmdOptions(loginOptions LoginCmdOptions) serviceProviders.UserInfo {
@@ -28,6 +29,7 @@ func GetUserInfoFromLoginCmdOptions(loginOptions LoginCmdOptions) serviceProvide
 		NoMask:   loginOptions.NoMask,
 		Password: loginOptions.Password,
 		Role:     loginOptions.Role,
+		Factor:   loginOptions.Factor,
 	}
 	return user
 }

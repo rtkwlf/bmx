@@ -81,6 +81,9 @@ func MergeWriteCmdOptions(uc config.UserConfig, wc bmx.WriteCmdOptions) bmx.Writ
 	if wc.Role == "" {
 		wc.Role = uc.Role
 	}
+	if wc.Factor == "" {
+		wc.Factor = uc.Factor
+	}
 
 	return wc
 }

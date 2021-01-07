@@ -77,6 +77,9 @@ func mergePrintOptions(uc config.UserConfig, pc bmx.PrintCmdOptions) bmx.PrintCm
 	if pc.Role == "" {
 		pc.Role = uc.Role
 	}
+	if pc.Factor == "" {
+		pc.Factor = uc.Factor
+	}
 
 	return pc
 }

@@ -23,4 +23,5 @@ type UserInfo struct {
 	NoMask   bool
 	Password string
 	Role     string
+	Factor   string
 }
