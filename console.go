@@ -94,7 +94,6 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 	if len(oktaApplications) == 1 {
 		app = oktaApplications[0]
 	} else {
-		}
 		app = oktaApplications[accountID]
 	}
 
