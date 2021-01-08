@@ -9,7 +9,7 @@ BMX manages your STS tokens with the following commands:
 
 BMX prints detailed usage information when you run `bmx -h` or `bmx <cmd> -h`.
 
-BMX was developed by D2L (Brightspace/bmx), and modifications have been made to the project by Arctic Wolf.
+BMX was developed by D2L ([Brightspace/bmx](https://github.com/Brightspace/bmx/)), and modifications have been made to the project by Arctic Wolf.
 
 ## Installation
 
