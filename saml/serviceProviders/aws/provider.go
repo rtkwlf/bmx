@@ -105,7 +105,7 @@ func (a AwsServiceProvider) AssumeRole(creds sts.Credentials, targetRole string)
 	stsClient := sts.New(awsSession)
 	input := &sts.AssumeRoleInput{
 		RoleArn: aws.String(targetRole),
-		RoleSessionName: aws.String("cstavro-test"),
+		RoleSessionName: aws.String(GetRoleSessionName()),
 	}
 	out, err := stsClient.AssumeRole(input)
 	if err != nil {
@@ -144,6 +144,17 @@ func (a AwsServiceProvider) pickRole(roles []awsRole) awsRole {
 	j, _ := a.InputReader.ReadInt("Select a role: ")
 
 	return roles[j]
+}
+
+// A PID prefixed version of the current user as defined by env vars
+func GetRoleSessionName() string {
+	name := os.Getenv("USER")
+
+	if name == "" {
+		name = os.Getenv("USERNAME")
+	}
+
+	return fmt.Sprintf("%s_%d", name, os.Getpid())
 }
 
 func listRoles(samlResponse *Saml2pResponse) []awsRole {
