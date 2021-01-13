@@ -20,10 +20,11 @@ import (
 	"encoding/base64"
 	"encoding/xml"
 	"fmt"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/aws/aws-sdk-go/aws/credentials"
 
 	"github.com/rtkwlf/bmx/console"
 
@@ -90,7 +91,7 @@ func (a AwsServiceProvider) GetCredentials(saml string, desiredRole string) *sts
 	return out.Credentials
 }
 
-func (a AwsServiceProvider) AssumeRole(creds sts.Credentials, targetRole string) (*sts.Credentials, error) {
+func (a AwsServiceProvider) AssumeRole(creds sts.Credentials, targetRole string, sessionName string) (*sts.Credentials, error) {
 	awsSession, err := session.NewSessionWithOptions(session.Options{
 		Config: aws.Config{Credentials: credentials.NewStaticCredentialsFromCreds(credentials.Value{
 			AccessKeyID:     aws.StringValue(creds.AccessKeyId),
@@ -104,8 +105,8 @@ func (a AwsServiceProvider) AssumeRole(creds sts.Credentials, targetRole string)
 
 	stsClient := sts.New(awsSession)
 	input := &sts.AssumeRoleInput{
-		RoleArn: aws.String(targetRole),
-		RoleSessionName: aws.String(GetRoleSessionName()),
+		RoleArn:         aws.String(targetRole),
+		RoleSessionName: aws.String(sessionName),
 	}
 	out, err := stsClient.AssumeRole(input)
 	if err != nil {
@@ -113,11 +114,11 @@ func (a AwsServiceProvider) AssumeRole(creds sts.Credentials, targetRole string)
 	}
 
 	return &sts.Credentials{
-			AccessKeyId: out.Credentials.AccessKeyId,
-			SecretAccessKey: out.Credentials.SecretAccessKey,
-			SessionToken: out.Credentials.SessionToken,
-			Expiration: out.Credentials.Expiration,
-		}, nil
+		AccessKeyId:     out.Credentials.AccessKeyId,
+		SecretAccessKey: out.Credentials.SecretAccessKey,
+		SessionToken:    out.Credentials.SessionToken,
+		Expiration:      out.Credentials.Expiration,
+	}, nil
 
 }
 
@@ -144,17 +145,6 @@ func (a AwsServiceProvider) pickRole(roles []awsRole) awsRole {
 	j, _ := a.InputReader.ReadInt("Select a role: ")
 
 	return roles[j]
-}
-
-// A PID prefixed version of the current user as defined by env vars
-func GetRoleSessionName() string {
-	name := os.Getenv("USER")
-
-	if name == "" {
-		name = os.Getenv("USERNAME")
-	}
-
-	return fmt.Sprintf("%s_%d", name, os.Getpid())
 }
 
 func listRoles(samlResponse *Saml2pResponse) []awsRole {

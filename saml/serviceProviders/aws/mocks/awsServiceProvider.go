@@ -34,6 +34,6 @@ func (a AwsServiceProviderMock) GetCredentials(saml string, desiredRole string) 
 	}
 }
 
-func (a AwsServiceProviderMock) AssumeRole(creds sts.Credentials, targetRole string) (*sts.Credentials, error) {
+func (a AwsServiceProviderMock) AssumeRole(creds sts.Credentials, targetRole string, sessionName string) (*sts.Credentials, error) {
 	return nil, nil
 }

@@ -69,7 +69,7 @@ func Print(idProvider identityProviders.IdentityProvider, awsProvider servicePro
 	creds := awsProvider.GetCredentials(saml, printOptions.Role)
 
 	if printOptions.AssumeRole != "" {
-		creds, err = awsProvider.AssumeRole(*creds, printOptions.AssumeRole)
+		creds, err = awsProvider.AssumeRole(*creds, printOptions.AssumeRole, printOptions.User)
 	}
 
 	command := printCommand(printOptions, creds)
