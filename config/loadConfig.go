@@ -39,7 +39,8 @@ type UserConfig struct {
 	Account             string
 	Role                string
 	Profile             string
-	AssumeRole			string
+	AssumeRole          string
+	Factor              string
 }
 
 func NewUserConfig() UserConfig {

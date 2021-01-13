@@ -37,6 +37,7 @@ type WriteCmdOptions struct {
 	Profile  string
 	Output   string
 	Role     string
+	Factor   string
 }
 
 func GetUserInfoFromWriteCmdOptions(writeOptions WriteCmdOptions) serviceProviders.UserInfo {
@@ -46,6 +47,7 @@ func GetUserInfoFromWriteCmdOptions(writeOptions WriteCmdOptions) serviceProvide
 		Account:  writeOptions.Account,
 		NoMask:   writeOptions.NoMask,
 		Password: writeOptions.Password,
+		Factor:   writeOptions.Factor,
 	}
 	return user
 }

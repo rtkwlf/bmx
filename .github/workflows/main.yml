@@ -14,7 +14,7 @@ jobs:
   test:
     strategy:
       matrix:
-        go-version: [1.14.x]
+        go-version: [1.15.x]
         platform: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.platform }}
     timeout-minutes: 5
@@ -27,6 +27,9 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Checkout code
         uses: actions/checkout@v1
+      - name: Format
+        run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
+        if: matrix.os == 'ubuntu-latest'
       - name: Cache Go modules
         uses: actions/cache@v2
         with:

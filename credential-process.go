@@ -20,6 +20,7 @@ type CredentialProcessCmdOptions struct {
 	Password string
 	Role     string
 	Output   string
+	Factor   string
 }
 
 type CredentialProcessResult struct {
@@ -38,6 +39,7 @@ func GetUserInfoFromCredentialProcessCmdOptions(printOptions CredentialProcessCm
 		NoMask:   printOptions.NoMask,
 		Password: printOptions.Password,
 		Role:     printOptions.Role,
+		Factor:   printOptions.Factor,
 	}
 	return user
 }

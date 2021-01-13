@@ -9,6 +9,7 @@ go_library(
     srcs = [
         "console.go",
         "credential-process.go",
+        "login.go",
         "print.go",
         "print_unix.go",
         "print_windows.go",
@@ -28,10 +29,14 @@ go_library(
 
 go_test(
     name = "go_default_test",
-    srcs = ["print_test.go"],
+    srcs = [
+        "console_test.go",
+        "print_test.go",
+    ],
     embed = [":go_default_library"],
     deps = [
         "//mocks:go_default_library",
+        "//saml/identityProviders/okta:go_default_library",
         "//saml/serviceProviders/aws/mocks:go_default_library",
     ],
 )

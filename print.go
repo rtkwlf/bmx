@@ -33,14 +33,15 @@ const (
 )
 
 type PrintCmdOptions struct {
-	Org      string
-	User     string
-	Account  string
-	NoMask   bool
-	Password string
-	Role     string
-	Output   string
+	Org        string
+	User       string
+	Account    string
+	NoMask     bool
+	Password   string
+	Role       string
+	Output     string
 	AssumeRole string
+	Factor     string
 }
 
 func GetUserInfoFromPrintCmdOptions(printOptions PrintCmdOptions) serviceProviders.UserInfo {
@@ -51,6 +52,7 @@ func GetUserInfoFromPrintCmdOptions(printOptions PrintCmdOptions) serviceProvide
 		NoMask:   printOptions.NoMask,
 		Password: printOptions.Password,
 		Role:     printOptions.Role,
+		Factor:   printOptions.Factor,
 	}
 	return user
 }

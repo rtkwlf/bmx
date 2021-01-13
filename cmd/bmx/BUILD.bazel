@@ -4,7 +4,9 @@ go_library(
     name = "go_default_library",
     srcs = [
         "bmx.go",
+        "config.go",
         "credential-process.go",
+        "login.go",
         "print.go",
         "version.go",
         "write.go",
@@ -18,6 +20,7 @@ go_library(
         "//saml/identityProviders/okta:go_default_library",
         "//saml/serviceProviders/aws:go_default_library",
         "@com_github_spf13_cobra//:go_default_library",
+        "@in_gopkg_ini_v1//:go_default_library",
     ],
 )
 
@@ -25,4 +28,8 @@ go_binary(
     name = "bmx",
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
+    x_defs = {
+        "version": "{BMX_VERSION}",
+        "commit": "{STABLE_GIT_COMMIT}",
+    },
 )

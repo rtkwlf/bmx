@@ -72,7 +72,7 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 	if !ok {
 		user.Password = getPassword(consolerw, user.NoMask)
 		var err error
-		userID, err = oktaClient.Authenticate(user.User, user.Password, user.Org)
+		userID, err = oktaClient.Authenticate(user.User, user.Password, user.Org, user.Factor)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -83,31 +83,42 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 		log.Fatal(err)
 	}
 
-	app, found := findApp(user.Account, oktaApplications)
-	if !found {
-		// select an account
-		consolerw.Println("Available accounts:")
-		for idx, a := range oktaApplications {
-			if a.AppName == "amazon_aws" {
-				consolerw.Println(fmt.Sprintf("[%d] %s", idx, a.Label))
-			}
+	if len(oktaApplications) < 1 {
+		log.Fatal(fmt.Errorf("No AWS okta applinks were found for userid:%s", userID))
+	}
+
+	app, found := FindAppByLabel(user.Account, oktaApplications)
+	if found {
+		return oktaClient.GetSaml(app)
+	}
+
+	if len(oktaApplications) == 1 {
+		app = oktaApplications[0]
+	} else {
+		appLabels := []string{}
+		for _, app := range oktaApplications {
+			appLabels = append(appLabels, app.Label)
 		}
-		var accountId int
-		if accountId, err = consolerw.ReadInt("Select an account: "); err != nil {
+
+		consolerw.Println("Available accounts:")
+		accountID, err := consolerw.Option("Select an account: ", appLabels)
+		if err != nil {
 			log.Fatal(err)
 		}
-		app = &oktaApplications[accountId]
+		app = oktaApplications[accountID]
 	}
 
-	return oktaClient.GetSaml(*app)
+	return oktaClient.GetSaml(app)
 }
 
-func findApp(app string, apps []okta.OktaAppLink) (foundApp *okta.OktaAppLink, found bool) {
-	for _, v := range apps {
-		if strings.ToLower(v.Label) == strings.ToLower(app) {
-			return &v, true
+func FindAppByLabel(name string, applinks []okta.OktaAppLink) (result okta.OktaAppLink, ok bool) {
+	for _, app := range applinks {
+		if strings.EqualFold(app.Label, name) {
+			result = app
+			ok = true
+			break
 		}
 	}
 
-	return nil, false
+	return result, ok
 }

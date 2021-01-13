@@ -88,7 +88,7 @@ func (o *OktaClient) GetSaml(appLink OktaAppLink) (string, error) {
 	return GetSaml(appResponse.Body)
 }
 
-func (o *OktaClient) Authenticate(username, password, org string) (string, error) {
+func (o *OktaClient) Authenticate(username, password, org, factor string) (string, error) {
 	rel, err := url.Parse("authn")
 	if err != nil {
 		return "", err
@@ -119,12 +119,15 @@ func (o *OktaClient) Authenticate(username, password, org string) (string, error
 
 	oktaAuthResponse := &OktaAuthResponse{}
 	z, err := ioutil.ReadAll(authResponse.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
 	err = json.Unmarshal(z, &oktaAuthResponse)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err := o.doMfa(oktaAuthResponse); err != nil {
+	if err := o.doMfa(oktaAuthResponse, factor); err != nil {
 		log.Fatal(err)
 	}
 
@@ -136,23 +139,29 @@ func (o *OktaClient) Authenticate(username, password, org string) (string, error
 }
 
 func (o *OktaClient) AuthenticateFromCache(username, org string) (string, bool) {
-	sessionID, ok := o.GetCachedOktaSession(username, org)
+	session, ok := o.GetCachedOktaSession(username, org)
 	if !ok {
 		return "", false
 	}
 
-	o.setSessionId(sessionID)
+	o.setSessionId(session.SessionId)
 
 	rel, _ := url.Parse(fmt.Sprintf("users/me"))
 	url := o.BaseUrl.ResolveReference(rel)
 
 	meRequest, err := http.NewRequest("GET", url.String(), nil)
+	if err != nil {
+		return "", false
+	}
 	meResponse, err := o.HttpClient.Do(meRequest)
 	if err != nil {
 		return "", false
 	}
 	var me OktaMeResponse
 	b, err := ioutil.ReadAll(meResponse.Body)
+	if err != nil {
+		return "", false
+	}
 	err = json.Unmarshal(b, &me)
 	if err != nil {
 		return "", false
@@ -160,23 +169,44 @@ func (o *OktaClient) AuthenticateFromCache(username, org string) (string, bool) 
 	return me.Id, true
 }
 
-func (o *OktaClient) ListApplications(userId string) ([]OktaAppLink, error) {
+func (o *OktaClient) ListAppLinks(userId string) ([]OktaAppLink, error) {
 	rel, _ := url.Parse(fmt.Sprintf("users/%s/appLinks", userId))
 	url := o.BaseUrl.ResolveReference(rel)
 
 	listApplicationRequest, err := http.NewRequest("GET", url.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 	listApplicationsResponse, err := o.HttpClient.Do(listApplicationRequest)
 	if err != nil {
 		return nil, err
 	}
 	var oktaApplications []OktaAppLink
 	b, err := ioutil.ReadAll(listApplicationsResponse.Body)
+	if err != nil {
+		return nil, err
+	}
 	err = json.Unmarshal(b, &oktaApplications)
 	if err != nil {
 		return nil, err
 	}
 
 	return oktaApplications, nil
+}
+
+func (o *OktaClient) ListApplications(userId string) ([]OktaAppLink, error) {
+	oktaApplications, err := o.ListAppLinks(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	applications := []OktaAppLink{}
+	for _, app := range oktaApplications {
+		if app.AppName == "amazon_aws" {
+			applications = append(applications, app)
+		}
+	}
+	return applications, nil
 }
 
 func (o *OktaClient) startSession(sessionToken string) (*OktaSessionResponse, error) {
@@ -192,10 +222,19 @@ func (o *OktaClient) startSession(sessionToken string) (*OktaSessionResponse, er
 		SessionToken: sessionToken,
 	}
 	b, err := json.Marshal(oktaSessionsRequest)
+	if err != nil {
+		return nil, err
+	}
 	sessionResponse, err := o.HttpClient.Post(url.String(), applicationJson, bytes.NewReader(b))
+	if err != nil {
+		return nil, err
+	}
 
 	oktaSessionResponse := &OktaSessionResponse{}
 	b, err = ioutil.ReadAll(sessionResponse.Body)
+	if err != nil {
+		return nil, err
+	}
 	err = json.Unmarshal(b, oktaSessionResponse)
 	if err != nil {
 		return nil, err
@@ -219,18 +258,19 @@ func (o *OktaClient) CacheOktaSession(userId, org, sessionId, expiresAt string) 
 	o.SessionCache.SaveSessions(existingSessions)
 }
 
-func (o *OktaClient) GetCachedOktaSession(userid, org string) (string, bool) {
+func (o *OktaClient) GetCachedOktaSession(userid, org string) (file.OktaSessionCache, bool) {
+	var result file.OktaSessionCache
 	oktaSessions, err := readOktaCacheSessionsFile(o)
 	if err != nil {
-		return "", false
+		return result, false
 	}
 	for _, oktaSession := range oktaSessions {
 		if oktaSession.Userid == userid &&
 			oktaSession.Org == org {
-			return oktaSession.SessionId, true
+			return oktaSession, true
 		}
 	}
-	return "", false
+	return result, false
 }
 
 func readOktaCacheSessionsFile(o *OktaClient) ([]file.OktaSessionCache, error) {
@@ -312,51 +352,75 @@ func (o *OktaClient) verifyTotpMfa(oktaAuthResponse *OktaAuthResponse, selectedF
 		return err
 	}
 
+	if oktaAuthResponse.Status != "SUCCESS" {
+		return fmt.Errorf("Failed totp challenge for code: %s", code)
+	}
+
 	return nil
 }
 
-func (o *OktaClient) doMfa(oktaAuthResponse *OktaAuthResponse) error {
-	if oktaAuthResponse.Status == "MFA_REQUIRED" {
-		o.ConsoleReader.Println("MFA Required")
-		for idx, factor := range oktaAuthResponse.Embedded.Factors {
-			o.ConsoleReader.Println(fmt.Sprintf("%d - %s", idx, factor.FactorType))
-		}
+func (o *OktaClient) selectFactor(factors []OktaAuthFactors, desiredFactor string) (OktaAuthFactors, error) {
+	if len(factors) == 1 {
+		return factors[0], nil
+	}
 
-		var mfaIdx int
-		var err error
-		if mfaIdx, err = o.ConsoleReader.ReadInt("Select an available MFA option: "); err != nil {
-			log.Fatal(err)
+	mfaLabels := []string{}
+	for idx, factor := range factors {
+		mfaLabels = append(mfaLabels, factor.FactorType)
+		if desiredFactor != "" && strings.EqualFold(factor.FactorType, desiredFactor) {
+			return factors[idx], nil
 		}
-		selectedFactor := oktaAuthResponse.Embedded.Factors[mfaIdx]
-		vurl := oktaAuthResponse.Embedded.Factors[mfaIdx].Links.Verify.Url
+	}
 
-		body := fmt.Sprintf(`{"stateToken":"%s"}`, oktaAuthResponse.StateToken)
-		authResponse, err := o.HttpClient.Post(vurl, "application/json", strings.NewReader(body))
-		if err != nil {
-			log.Fatal(err)
-		}
+	o.ConsoleReader.Println("MFA Required:")
+	mfaIdx, err := o.ConsoleReader.Option("Select an available MFA option: ", mfaLabels)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-		z, _ := ioutil.ReadAll(authResponse.Body)
-		err = json.Unmarshal(z, &oktaAuthResponse)
-		if err != nil {
-			log.Fatal(err)
-		}
+	return factors[mfaIdx], nil
+}
 
-		// This is a rough outline and can be better organized. For now
-		// I'm comfortable with adding in this kind of handling for
-		// multiple MFA factors. I'd like for this to be done in a
-		// mapped action form (e.g. actions[factortype] => perform action)
-		if selectedFactor.FactorType == "token:software:totp" {
-			err = o.verifyTotpMfa(oktaAuthResponse, selectedFactor)
-			if err != nil {
-				log.Fatal(err)
-			}
-		} else if selectedFactor.FactorType == "push" {
-			err = o.verifyPushMfa(oktaAuthResponse, selectedFactor)
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
+func (o *OktaClient) doMfa(oktaAuthResponse *OktaAuthResponse, factor string) error {
+	if oktaAuthResponse.Status != "MFA_REQUIRED" {
+		return nil
+	}
+
+	if len(oktaAuthResponse.Embedded.Factors) == 0 {
+		return fmt.Errorf("No MFA factors available with required MFA")
+	}
+
+	selectedFactor, err := o.selectFactor(oktaAuthResponse.Embedded.Factors, factor)
+	if err != nil {
+		log.Fatal(err)
+	}
+	vurl := selectedFactor.Links.Verify.Url
+
+	body := fmt.Sprintf(`{"stateToken":"%s"}`, oktaAuthResponse.StateToken)
+	authResponse, err := o.HttpClient.Post(vurl, "application/json", strings.NewReader(body))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	z, _ := ioutil.ReadAll(authResponse.Body)
+	err = json.Unmarshal(z, &oktaAuthResponse)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// This is a rough outline and can be better organized. For now
+	// I'm comfortable with adding in this kind of handling for
+	// multiple MFA factors. I'd like for this to be done in a
+	// mapped action form (e.g. actions[factortype] => perform action)
+	if selectedFactor.FactorType == "token:software:totp" {
+		err = o.verifyTotpMfa(oktaAuthResponse, selectedFactor)
+	} else if selectedFactor.FactorType == "push" {
+		err = o.verifyPushMfa(oktaAuthResponse, selectedFactor)
+	} else {
+		err = fmt.Errorf("Selected MFA factor %s is not supported", selectedFactor.FactorType)
+	}
+	if err != nil {
+		log.Fatal(err)
 	}
 	return nil
 }

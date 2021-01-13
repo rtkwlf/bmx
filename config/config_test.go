@@ -23,8 +23,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/rtkwlf/bmx/config"
 	"github.com/magiconair/properties/assert"
+	"github.com/rtkwlf/bmx/config"
 )
 
 func TestLoadConfigFile(t *testing.T) {
@@ -47,6 +47,9 @@ func TestLoadConfigFile(t *testing.T) {
 	}
 
 	err = os.MkdirAll(path.Join(tempUserDir, ".bmx"), os.ModeDir|os.ModePerm)
+	if err != nil {
+		t.Fatal(err)
+	}
 	userConfigFile := filepath.ToSlash(path.Join(tempUserDir, ".bmx", "config"))
 	ioutil.WriteFile(userConfigFile, []byte("allow_project_configs=true"), os.ModePerm)
 

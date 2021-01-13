@@ -1,0 +1,2 @@
+build --stamp --workspace_status_command=./tools/stamp.sh
+test --test_output=all

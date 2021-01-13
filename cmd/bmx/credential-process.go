@@ -67,6 +67,9 @@ func mergeProcessOptions(uc config.UserConfig, pc bmx.CredentialProcessCmdOption
 	if pc.Role == "" {
 		pc.Role = uc.Role
 	}
+	if pc.Factor == "" {
+		pc.Factor = uc.Factor
+	}
 
 	return pc
 }
