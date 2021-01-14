@@ -33,3 +33,7 @@ func (a AwsServiceProviderMock) GetCredentials(saml string, desiredRole string) 
 		Expiration:      aws.Time(time.Now().Add(time.Hour * 8)),
 	}
 }
+
+func (a AwsServiceProviderMock) AssumeRole(creds sts.Credentials, targetRole string, sessionName string) (*sts.Credentials, error) {
+	return nil, nil
+}

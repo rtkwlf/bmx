@@ -24,6 +24,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/aws/aws-sdk-go/aws/credentials"
+
 	"github.com/rtkwlf/bmx/console"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -87,6 +89,37 @@ func (a AwsServiceProvider) GetCredentials(saml string, desiredRole string) *sts
 	}
 
 	return out.Credentials
+}
+
+func (a AwsServiceProvider) AssumeRole(creds sts.Credentials, targetRole string, sessionName string) (*sts.Credentials, error) {
+	awsSession, err := session.NewSessionWithOptions(session.Options{
+		Config: aws.Config{Credentials: credentials.NewStaticCredentialsFromCreds(credentials.Value{
+			AccessKeyID:     aws.StringValue(creds.AccessKeyId),
+			SecretAccessKey: aws.StringValue(creds.SecretAccessKey),
+			SessionToken:    aws.StringValue(creds.SessionToken),
+		})},
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	stsClient := sts.New(awsSession)
+	input := &sts.AssumeRoleInput{
+		RoleArn:         aws.String(targetRole),
+		RoleSessionName: aws.String(sessionName),
+	}
+	out, err := stsClient.AssumeRole(input)
+	if err != nil {
+		return nil, err
+	}
+
+	return &sts.Credentials{
+		AccessKeyId:     out.Credentials.AccessKeyId,
+		SecretAccessKey: out.Credentials.SecretAccessKey,
+		SessionToken:    out.Credentials.SessionToken,
+		Expiration:      out.Credentials.Expiration,
+	}, nil
+
 }
 
 func findRole(roles []awsRole, desiredRole string) awsRole {

@@ -22,4 +22,5 @@ import (
 
 type ServiceProvider interface {
 	GetCredentials(saml string, desiredRole string) *sts.Credentials
+	AssumeRole(creds sts.Credentials, targetRole string, sessionName string) (*sts.Credentials, error)
 }
