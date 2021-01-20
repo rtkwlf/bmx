@@ -66,6 +66,7 @@ func Print(idProvider identityProviders.IdentityProvider, awsProvider servicePro
 		log.Fatal(err)
 	}
 
+	// get saml roles log fatal
 	creds := awsProvider.GetCredentials(saml, printOptions.Role)
 
 	if printOptions.AssumeRole != "" {

@@ -56,6 +56,20 @@ type AwsServiceProvider struct {
 	UserOutput  *os.File
 }
 
+func (a AwsServiceProvider) GetSAMLRoles(saml string) []awsRole {
+	decodedSaml, err := base64.StdEncoding.DecodeString(saml)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	samlResponse := &Saml2pResponse{}
+	err = xml.Unmarshal(decodedSaml, samlResponse)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return listRoles(samlResponse)
+}
+
 func (a AwsServiceProvider) GetCredentials(saml string, desiredRole string) *sts.Credentials {
 	decodedSaml, err := base64.StdEncoding.DecodeString(saml)
 	if err != nil {
@@ -134,6 +148,7 @@ func findRole(roles []awsRole, desiredRole string) awsRole {
 	return awsRole{}
 }
 
+//TODO: Remove this
 func (a AwsServiceProvider) pickRole(roles []awsRole) awsRole {
 	if len(roles) == 1 {
 		return roles[0]

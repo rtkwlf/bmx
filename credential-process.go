@@ -53,6 +53,7 @@ func CredentialProcess(idProvider identityProviders.IdentityProvider, awsProvide
 		log.Fatal(err)
 	}
 
+	// get saml roles, check if exists, log fatal
 	creds := awsProvider.GetCredentials(saml, printOptions.Role)
 	command := credentialProcessCommand(printOptions, creds)
 	return command
