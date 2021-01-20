@@ -372,8 +372,11 @@ func (o *OktaClient) selectFactor(factors []OktaAuthFactors, desiredFactor strin
 		}
 	}
 
-	o.ConsoleReader.Println("MFA Required:")
-	mfaIdx, err := o.ConsoleReader.Option("Select an available MFA option: ", mfaLabels)
+	mfaIdx, err := o.ConsoleReader.Option(
+		"MFA Required:",
+		"Select an available MFA option: ",
+		mfaLabels,
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
