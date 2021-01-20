@@ -2,13 +2,12 @@ name: Build & Test
 on:
   push:
     paths:
-      - "*.go"
-      - "*/*.go"
-      - "*/*/*.go"
-      - "*/*/*/*.go"
-      - "*/*/*/*/*.go"
-      - "*/*/*/*/*/*.go"
       - .github/workflows/main.yml
+      - "**/*.go"
+      - "**/*.bazel"
+      - ".bazelrc"
+      - "go.mod"
+      - "go.sum"
 
 jobs:
   test:
