@@ -56,6 +56,15 @@ type AwsServiceProvider struct {
 	UserOutput  *os.File
 }
 
+func FindAwsRoleByName(name string, roles []AwsRole) (role AwsRole, err error) {
+	for _, role := range roles {
+		if strings.EqualFold(role.Name, name) {
+			return role, nil
+		}
+	}
+	return AwsRole{}, fmt.Errorf("Unable to find desired role [%s]", name)
+}
+
 func (a AwsServiceProvider) ListRoles(saml string) (roles []AwsRole, err error) {
 	decodedSaml, err := base64.StdEncoding.DecodeString(saml)
 	if err != nil {
@@ -72,7 +81,7 @@ func (a AwsServiceProvider) ListRoles(saml string) (roles []AwsRole, err error) 
 	return roles, err
 }
 
-func (a AwsServiceProvider) GetCredentials(saml string, desiredRole string) *sts.Credentials {
+func (a AwsServiceProvider) GetCredentials(saml string, role AwsRole) *sts.Credentials {
 	decodedSaml, err := base64.StdEncoding.DecodeString(saml)
 	if err != nil {
 		log.Fatal(err)
@@ -82,15 +91,6 @@ func (a AwsServiceProvider) GetCredentials(saml string, desiredRole string) *sts
 	err = xml.Unmarshal(decodedSaml, samlResponse)
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	var role AwsRole
-	roles := listRoles(samlResponse)
-
-	if desiredRole == "" {
-		role = a.pickRole(roles)
-	} else {
-		role = findRole(roles, desiredRole)
 	}
 
 	samlInput := &sts.AssumeRoleWithSAMLInput{
@@ -136,18 +136,6 @@ func (a AwsServiceProvider) AssumeRole(creds sts.Credentials, targetRole string,
 		Expiration:      out.Credentials.Expiration,
 	}, nil
 
-}
-
-func findRole(roles []AwsRole, desiredRole string) AwsRole {
-	desiredRole = strings.ToLower(desiredRole)
-	for _, role := range roles {
-		if strings.Compare(strings.ToLower(role.Name), desiredRole) == 0 {
-			return role
-		}
-	}
-
-	log.Fatalf("Unable to find desired role [%s]", desiredRole)
-	return AwsRole{}
 }
 
 func (a AwsServiceProvider) pickRole(roles []AwsRole) AwsRole {

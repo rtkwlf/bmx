@@ -66,7 +66,8 @@ func Print(idProvider identityProviders.IdentityProvider, awsProvider servicePro
 		log.Fatal(err)
 	}
 
-	creds := awsProvider.GetCredentials(saml, printOptions.Role)
+	role, err := selectRoleFromSaml(saml, printOptions.Role, awsProvider, consolerw)
+	creds := awsProvider.GetCredentials(saml, role)
 
 	if printOptions.AssumeRole != "" {
 		creds, err = awsProvider.AssumeRole(*creds, printOptions.AssumeRole, printOptions.User)

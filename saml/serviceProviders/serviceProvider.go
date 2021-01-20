@@ -22,7 +22,7 @@ import (
 )
 
 type ServiceProvider interface {
-	GetCredentials(saml string, desiredRole string) *sts.Credentials
+	GetCredentials(saml string, role aws.AwsRole) *sts.Credentials
 	ListRoles(saml string) ([]aws.AwsRole, error)
 	AssumeRole(creds sts.Credentials, targetRole string, sessionName string) (*sts.Credentials, error)
 }
