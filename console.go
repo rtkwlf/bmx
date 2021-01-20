@@ -100,7 +100,11 @@ func authenticate(user serviceProviders.UserInfo, oktaClient identityProviders.I
 			appLabels = append(appLabels, app.Label)
 		}
 
-		accountID, err := consolerw.Option("Available accounts:", "Select an account: ", appLabels)
+		accountID, err := consolerw.Option(
+			"Available accounts:",
+			"Select an account: ",
+			appLabels,
+		)
 		if err != nil {
 			log.Fatal(err)
 		}
