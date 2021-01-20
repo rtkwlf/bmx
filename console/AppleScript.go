@@ -3,6 +3,7 @@ package console
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/andybrewer/mack"
 )
@@ -57,7 +58,7 @@ func (r *AppleScriptConsole) ReadPassword(prompt string) (string, error) {
 		Text:         prompt,
 		Title:        prompt,
 		HiddenAnswer: true,
-		Buttons:      "Yes, No, Don't Know",
+		Answer:       "123",
 	}
 	response, err := mack.DialogBox(dialog)
 	if err != nil {
@@ -80,19 +81,24 @@ func (r *AppleScriptConsole) ReadPassword(prompt string) (string, error) {
 //  prompt string      // Required - The prompt for input
 //  options string     // Required - The options given in the dialog box
 func (r *AppleScriptConsole) Option(message string, prompt string, options []string) (int, error) {
-	response, err := mack.Dialog(fmt.Sprintf("%s. %s", message, prompt))
+	listOptions := mack.ListOptions{
+		Items:   options,
+		Title:   message,
+		Message: prompt,
+	}
+	response, didCancel, err := mack.ListWithOpts(listOptions)
 	if err != nil {
 		return -1, err
 	}
 
-	if response.GaveUp {
+	if didCancel {
 		return -1, fmt.Errorf("No option was selected")
 	}
 
-	i, err := strconv.Atoi(response.Text)
-	if err != nil {
-		return -1, err
+	for idx, app := range options {
+		if strings.EqualFold(response[0], app) {
+			return idx, nil
+		}
 	}
-
-	return i, nil
+	return -1, fmt.Errorf("No option was selected")
 }

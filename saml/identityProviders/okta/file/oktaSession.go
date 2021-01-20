@@ -33,17 +33,21 @@ type OktaSessionCache struct {
 
 type OktaSessionStorage struct{}
 
+const (
+	sessionFileName = "sessions-temp"
+)
+
 func (o *OktaSessionStorage) SaveSessions(sessions []OktaSessionCache) {
 	sessionsJSON, _ := json.Marshal(sessions)
 	bmxHome := path.Join(userHomeDir(), ".bmx")
 	if _, err := os.Stat(bmxHome); os.IsNotExist(err) {
 		os.MkdirAll(bmxHome, os.ModeDir|os.ModePerm)
 	}
-	ioutil.WriteFile(path.Join(userHomeDir(), ".bmx", "sessions"), sessionsJSON, 0644)
+	ioutil.WriteFile(path.Join(userHomeDir(), ".bmx", sessionFileName), sessionsJSON, 0644)
 }
 
 func (o *OktaSessionStorage) Sessions() ([]OktaSessionCache, error) {
-	sessionsFile, err := ioutil.ReadFile(path.Join(userHomeDir(), ".bmx", "sessions"))
+	sessionsFile, err := ioutil.ReadFile(path.Join(userHomeDir(), ".bmx", sessionFileName))
 	if os.IsNotExist(err) {
 		return nil, nil
 	}
