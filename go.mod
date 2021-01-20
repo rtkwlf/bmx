@@ -3,6 +3,7 @@ module github.com/rtkwlf/bmx
 go 1.14
 
 require (
+	github.com/andybrewer/mack v0.0.0-20200226161639-15be3d47cc54 // indirect
 	github.com/aws/aws-sdk-go v1.36.19
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.0
