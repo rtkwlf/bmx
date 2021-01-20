@@ -38,6 +38,6 @@ func (r ConsoleReaderMock) Print(prompt string) error {
 	return nil
 }
 
-func (r ConsoleReaderMock) Option(prompt string, options []string) (int, error) {
+func (r ConsoleReaderMock) Option(message string, prompt string, options []string) (int, error) {
 	return 0, nil
 }

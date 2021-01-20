@@ -15,7 +15,7 @@ type ConsoleReader interface {
 	ReadLine(prompt string) (string, error)
 	ReadPassword(prompt string) (string, error)
 	ReadInt(prompt string) (int, error)
-	Option(prompt string, options []string) (int, error)
+	Option(message string, prompt string, options []string) (int, error)
 	Print(prompt string) error
 	Println(prompt string) error
 }
@@ -105,7 +105,7 @@ func (r *DefaultConsoleReader) ReadPassword(prompt string) (string, error) {
 	return string(pass[:]), nil
 }
 
-func (r *DefaultConsoleReader) Option(prompt string, options []string) (int, error) {
+func (r *DefaultConsoleReader) Option(message string, prompt string, options []string) (int, error) {
 	if len(options) < 1 {
 		return -1, fmt.Errorf("No options available for selection")
 	}
@@ -114,7 +114,7 @@ func (r *DefaultConsoleReader) Option(prompt string, options []string) (int, err
 		return 0, nil
 	}
 
-	var selection int
+	r.Println(message)
 	for idx, option := range options {
 		r.Println(fmt.Sprintf("[%d] %s", idx, option))
 	}
