@@ -21,6 +21,8 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/sts"
+
+	bmxaws "github.com/rtkwlf/bmx/saml/serviceProviders/aws"
 )
 
 type AwsServiceProviderMock struct{}
@@ -36,4 +38,8 @@ func (a AwsServiceProviderMock) GetCredentials(saml string, desiredRole string) 
 
 func (a AwsServiceProviderMock) AssumeRole(creds sts.Credentials, targetRole string, sessionName string) (*sts.Credentials, error) {
 	return nil, nil
+}
+
+func (a AwsServiceProviderMock) ListRoles(saml string) (role []bmxaws.AwsRole, err error) {
+	return role, err
 }

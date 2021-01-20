@@ -56,6 +56,22 @@ type AwsServiceProvider struct {
 	UserOutput  *os.File
 }
 
+func (a AwsServiceProvider) ListRoles(saml string) (roles []AwsRole, err error) {
+	decodedSaml, err := base64.StdEncoding.DecodeString(saml)
+	if err != nil {
+		return roles, err
+	}
+
+	samlResponse := &Saml2pResponse{}
+	err = xml.Unmarshal(decodedSaml, samlResponse)
+	if err != nil {
+		return roles, err
+	}
+
+	roles = listRoles(samlResponse)
+	return roles, err
+}
+
 func (a AwsServiceProvider) GetCredentials(saml string, desiredRole string) *sts.Credentials {
 	decodedSaml, err := base64.StdEncoding.DecodeString(saml)
 	if err != nil {
@@ -68,7 +84,7 @@ func (a AwsServiceProvider) GetCredentials(saml string, desiredRole string) *sts
 		log.Fatal(err)
 	}
 
-	var role awsRole
+	var role AwsRole
 	roles := listRoles(samlResponse)
 
 	if desiredRole == "" {
@@ -122,7 +138,7 @@ func (a AwsServiceProvider) AssumeRole(creds sts.Credentials, targetRole string,
 
 }
 
-func findRole(roles []awsRole, desiredRole string) awsRole {
+func findRole(roles []AwsRole, desiredRole string) AwsRole {
 	desiredRole = strings.ToLower(desiredRole)
 	for _, role := range roles {
 		if strings.Compare(strings.ToLower(role.Name), desiredRole) == 0 {
@@ -131,10 +147,10 @@ func findRole(roles []awsRole, desiredRole string) awsRole {
 	}
 
 	log.Fatalf("Unable to find desired role [%s]", desiredRole)
-	return awsRole{}
+	return AwsRole{}
 }
 
-func (a AwsServiceProvider) pickRole(roles []awsRole) awsRole {
+func (a AwsServiceProvider) pickRole(roles []AwsRole) AwsRole {
 	if len(roles) == 1 {
 		return roles[0]
 	}
@@ -147,13 +163,13 @@ func (a AwsServiceProvider) pickRole(roles []awsRole) awsRole {
 	return roles[j]
 }
 
-func listRoles(samlResponse *Saml2pResponse) []awsRole {
-	var roles []awsRole
+func listRoles(samlResponse *Saml2pResponse) []AwsRole {
+	var roles []AwsRole
 	for _, v := range samlResponse.Assertion.AttributeStatement.Attributes {
 		if v.Name == "https://aws.amazon.com/SAML/Attributes/Role" {
 			for _, w := range v.Values {
 				splitRole := strings.Split(w, ",")
-				role := awsRole{}
+				role := AwsRole{}
 				role.Principal = splitRole[0]
 				role.ARN = splitRole[1]
 				role.Name = strings.SplitAfter(role.ARN, "role/")[1]
@@ -186,7 +202,7 @@ type Saml2Attribute struct {
 	Values  []string `xml:"AttributeValue"`
 }
 
-type awsRole struct {
+type AwsRole struct {
 	Name      string
 	ARN       string
 	Principal string
