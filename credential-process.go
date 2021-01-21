@@ -2,6 +2,7 @@ package bmx
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"time"
 
@@ -49,7 +50,11 @@ func GetUserInfoFromCredentialProcessCmdOptions(printOptions CredentialProcessCm
 func selectRoleFromSaml(saml string, desiredRole string, awsProvider serviceProviders.ServiceProvider, consolerw console.ConsoleReader) (role aws.AwsRole, err error) {
 	roles, err := awsProvider.ListRoles(saml)
 	if err != nil {
-		log.Fatal(err)
+		return role, err
+	}
+
+	if len(roles) == 0 {
+		return role, fmt.Errorf("No roles available from SAML")
 	}
 
 	if desiredRole == "" {
