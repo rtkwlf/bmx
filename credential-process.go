@@ -86,6 +86,9 @@ func CredentialProcess(idProvider identityProviders.IdentityProvider, awsProvide
 	}
 
 	role, err := selectRoleFromSaml(saml, printOptions.Role, awsProvider, consolerw)
+	if err != nil {
+		log.Fatal(err)
+	}
 	creds := awsProvider.GetCredentials(saml, role)
 	command := credentialProcessCommand(printOptions, creds)
 	return command
