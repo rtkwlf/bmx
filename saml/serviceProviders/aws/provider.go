@@ -138,19 +138,6 @@ func (a AwsServiceProvider) AssumeRole(creds sts.Credentials, targetRole string,
 
 }
 
-func (a AwsServiceProvider) pickRole(roles []AwsRole) AwsRole {
-	if len(roles) == 1 {
-		return roles[0]
-	}
-
-	for i, role := range roles {
-		fmt.Fprintf(a.UserOutput, "[%d] %s\n", i, role.Name)
-	}
-	j, _ := a.InputReader.ReadInt("Select a role: ")
-
-	return roles[j]
-}
-
 func listRoles(samlResponse *Saml2pResponse) []AwsRole {
 	var roles []AwsRole
 	for _, v := range samlResponse.Assertion.AttributeStatement.Attributes {
