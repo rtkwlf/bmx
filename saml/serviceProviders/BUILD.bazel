@@ -8,5 +8,8 @@ go_library(
     ],
     importpath = "github.com/rtkwlf/bmx/saml/serviceProviders",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_aws_aws_sdk_go//service/sts:go_default_library"],
+    deps = [
+        "//saml/serviceProviders/aws:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/sts:go_default_library",
+    ],
 )

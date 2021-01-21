@@ -61,7 +61,11 @@ func Write(idProvider identityProviders.IdentityProvider, awsProvider servicePro
 		log.Fatal(err)
 	}
 
-	creds := awsProvider.GetCredentials(saml, writeOptions.Role)
+	role, err := selectRoleFromSaml(saml, writeOptions.Role, awsProvider, consolerw)
+	if err != nil {
+		log.Fatal(err)
+	}
+	creds := awsProvider.GetCredentials(saml, role)
 	writeToAwsCredentials(creds, writeOptions.Profile, resolvePath(writeOptions.Output))
 }
 
