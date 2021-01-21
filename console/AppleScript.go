@@ -91,6 +91,14 @@ func (r *AppleScriptConsole) ReadPassword(prompt string) (string, error) {
 //  prompt string      // Required - The prompt for input
 //  options string     // Required - The options given in the dialog box
 func (r *AppleScriptConsole) Option(message string, prompt string, options []string) (int, error) {
+	if len(options) == 0 {
+		return -1, fmt.Errorf("No options available for selection")
+	}
+
+	if len(options) == 1 {
+		return 0, nil
+	}
+
 	listOptions := mack.ListOptions{
 		Items:   options,
 		Title:   message,
