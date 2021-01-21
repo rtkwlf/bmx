@@ -330,7 +330,7 @@ func (o *OktaClient) verifyPushMfa(oktaAuthResponse *OktaAuthResponse, selectedF
 	}
 
 	if !verified {
-		return fmt.Errorf("Failed to verify challenge within timeout window.")
+		return fmt.Errorf("Failed to verify challenge within timeout window")
 	}
 
 	return nil
