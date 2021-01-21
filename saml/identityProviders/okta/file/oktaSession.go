@@ -31,6 +31,10 @@ type OktaSessionCache struct {
 	ExpiresAt string `json:"expiresAt"`
 }
 
+const (
+	sessionFileName = "sessions"
+)
+
 type OktaSessionStorage struct{}
 
 const (

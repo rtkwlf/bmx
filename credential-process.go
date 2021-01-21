@@ -2,8 +2,11 @@ package bmx
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"time"
+
+	"github.com/rtkwlf/bmx/saml/serviceProviders/aws"
 
 	"github.com/rtkwlf/bmx/console"
 	"github.com/rtkwlf/bmx/saml/identityProviders"
@@ -44,6 +47,35 @@ func GetUserInfoFromCredentialProcessCmdOptions(printOptions CredentialProcessCm
 	return user
 }
 
+func selectRoleFromSaml(saml string, desiredRole string, awsProvider serviceProviders.ServiceProvider, consolerw console.ConsoleReader) (role aws.AwsRole, err error) {
+	roles, err := awsProvider.ListRoles(saml)
+	if err != nil {
+		return role, err
+	}
+
+	if len(roles) == 0 {
+		return role, fmt.Errorf("No roles available from SAML")
+	}
+
+	if desiredRole == "" {
+		roleLabels := []string{}
+		for _, role := range roles {
+			roleLabels = append(roleLabels, role.Name)
+		}
+
+		index, err := consolerw.Option("AWS Account Role", "Select a role: ", roleLabels)
+		if err != nil {
+			return role, err
+		}
+		desiredRole = roleLabels[index]
+	}
+	role, err = aws.FindAwsRoleByName(desiredRole, roles)
+	if err != nil {
+		return role, err
+	}
+	return role, nil
+}
+
 func CredentialProcess(idProvider identityProviders.IdentityProvider, awsProvider serviceProviders.ServiceProvider, consolerw console.ConsoleReader, printOptions CredentialProcessCmdOptions) string {
 	printOptions.User = getUserIfEmpty(consolerw, printOptions.User)
 	user := GetUserInfoFromCredentialProcessCmdOptions(printOptions)
@@ -53,8 +85,11 @@ func CredentialProcess(idProvider identityProviders.IdentityProvider, awsProvide
 		log.Fatal(err)
 	}
 
-	// get saml roles, check if exists, log fatal
-	creds := awsProvider.GetCredentials(saml, printOptions.Role)
+	role, err := selectRoleFromSaml(saml, printOptions.Role, awsProvider, consolerw)
+	if err != nil {
+		log.Fatal(err)
+	}
+	creds := awsProvider.GetCredentials(saml, role)
 	command := credentialProcessCommand(printOptions, creds)
 	return command
 }

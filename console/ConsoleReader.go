@@ -106,7 +106,7 @@ func (r *DefaultConsoleReader) ReadPassword(prompt string) (string, error) {
 }
 
 func (r *DefaultConsoleReader) Option(message string, prompt string, options []string) (int, error) {
-	if len(options) < 1 {
+	if len(options) == 0 {
 		return -1, fmt.Errorf("No options available for selection")
 	}
 

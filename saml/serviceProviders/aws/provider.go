@@ -56,21 +56,32 @@ type AwsServiceProvider struct {
 	UserOutput  *os.File
 }
 
-func (a AwsServiceProvider) GetSAMLRoles(saml string) []awsRole {
-	decodedSaml, err := base64.StdEncoding.DecodeString(saml)
-	if err != nil {
-		log.Fatal(err)
+func FindAwsRoleByName(name string, roles []AwsRole) (AwsRole, error) {
+	for _, role := range roles {
+		if strings.EqualFold(role.Name, name) {
+			return role, nil
+		}
 	}
-
-	samlResponse := &Saml2pResponse{}
-	err = xml.Unmarshal(decodedSaml, samlResponse)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return listRoles(samlResponse)
+	return AwsRole{}, fmt.Errorf("Unable to find desired role [%s]", name)
 }
 
-func (a AwsServiceProvider) GetCredentials(saml string, desiredRole string) *sts.Credentials {
+func (a AwsServiceProvider) ListRoles(saml string) (roles []AwsRole, err error) {
+	decodedSaml, err := base64.StdEncoding.DecodeString(saml)
+	if err != nil {
+		return roles, err
+	}
+
+	samlResponse := &Saml2pResponse{}
+	err = xml.Unmarshal(decodedSaml, samlResponse)
+	if err != nil {
+		return roles, err
+	}
+
+	roles = listRoles(samlResponse)
+	return roles, err
+}
+
+func (a AwsServiceProvider) GetCredentials(saml string, role AwsRole) *sts.Credentials {
 	decodedSaml, err := base64.StdEncoding.DecodeString(saml)
 	if err != nil {
 		log.Fatal(err)
@@ -80,15 +91,6 @@ func (a AwsServiceProvider) GetCredentials(saml string, desiredRole string) *sts
 	err = xml.Unmarshal(decodedSaml, samlResponse)
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	var role awsRole
-	roles := listRoles(samlResponse)
-
-	if desiredRole == "" {
-		role = a.pickRole(roles)
-	} else {
-		role = findRole(roles, desiredRole)
 	}
 
 	samlInput := &sts.AssumeRoleWithSAMLInput{
@@ -136,20 +138,7 @@ func (a AwsServiceProvider) AssumeRole(creds sts.Credentials, targetRole string,
 
 }
 
-func findRole(roles []awsRole, desiredRole string) awsRole {
-	desiredRole = strings.ToLower(desiredRole)
-	for _, role := range roles {
-		if strings.Compare(strings.ToLower(role.Name), desiredRole) == 0 {
-			return role
-		}
-	}
-
-	log.Fatalf("Unable to find desired role [%s]", desiredRole)
-	return awsRole{}
-}
-
-//TODO: Remove this
-func (a AwsServiceProvider) pickRole(roles []awsRole) awsRole {
+func (a AwsServiceProvider) pickRole(roles []AwsRole) AwsRole {
 	if len(roles) == 1 {
 		return roles[0]
 	}
@@ -162,13 +151,13 @@ func (a AwsServiceProvider) pickRole(roles []awsRole) awsRole {
 	return roles[j]
 }
 
-func listRoles(samlResponse *Saml2pResponse) []awsRole {
-	var roles []awsRole
+func listRoles(samlResponse *Saml2pResponse) []AwsRole {
+	var roles []AwsRole
 	for _, v := range samlResponse.Assertion.AttributeStatement.Attributes {
 		if v.Name == "https://aws.amazon.com/SAML/Attributes/Role" {
 			for _, w := range v.Values {
 				splitRole := strings.Split(w, ",")
-				role := awsRole{}
+				role := AwsRole{}
 				role.Principal = splitRole[0]
 				role.ARN = splitRole[1]
 				role.Name = strings.SplitAfter(role.ARN, "role/")[1]
@@ -201,7 +190,7 @@ type Saml2Attribute struct {
 	Values  []string `xml:"AttributeValue"`
 }
 
-type awsRole struct {
+type AwsRole struct {
 	Name      string
 	ARN       string
 	Principal string
