@@ -24,7 +24,12 @@ func (r *AppleScriptConsole) Println(prompt string) error {
 }
 
 func (r *AppleScriptConsole) ReadLine(prompt string) (string, error) {
-	response, err := mack.Dialog(prompt)
+	dialog := mack.DialogOptions{
+		Text:   prompt,
+		Title:  prompt,
+		Answer: " ",
+	}
+	response, err := mack.DialogBox(dialog)
 	if err != nil {
 		return "", err
 	}
@@ -36,7 +41,12 @@ func (r *AppleScriptConsole) ReadLine(prompt string) (string, error) {
 }
 
 func (r *AppleScriptConsole) ReadInt(prompt string) (int, error) {
-	response, err := mack.Dialog(prompt)
+	dialog := mack.DialogOptions{
+		Text:   prompt,
+		Title:  prompt,
+		Answer: " ",
+	}
+	response, err := mack.DialogBox(dialog)
 	if err != nil {
 		return -1, err
 	}
