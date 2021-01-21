@@ -27,15 +27,17 @@ import (
 )
 
 var (
-	userConfig    config.UserConfig
-	consolerw     *console.DefaultConsoleReader
-	applescriptrw *console.AppleScriptConsole
+	userConfig config.UserConfig
+	consolerw  console.ConsoleReader
 )
 
 func init() {
 	userConfig = (config.ConfigLoader{}).LoadConfigs()
-	consolerw = console.NewConsoleReader()
-	applescriptrw = console.NewAppleScriptReader()
+	if userConfig.UseAppleScript {
+		consolerw = *console.NewConsoleReader()
+	} else {
+		consolerw = *console.NewAppleScriptReader()
+	}
 }
 
 func main() {

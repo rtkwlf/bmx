@@ -9,6 +9,7 @@ import (
 )
 
 type AppleScriptConsole struct {
+	Tty bool
 }
 
 func NewAppleScriptReader() *AppleScriptConsole {
@@ -16,14 +17,14 @@ func NewAppleScriptReader() *AppleScriptConsole {
 	return console
 }
 
-func (r *AppleScriptConsole) Print(prompt string) error {
+func (r AppleScriptConsole) Print(prompt string) error {
 	return mack.Notify(prompt)
 }
-func (r *AppleScriptConsole) Println(prompt string) error {
+func (r AppleScriptConsole) Println(prompt string) error {
 	return mack.Notify(prompt)
 }
 
-func (r *AppleScriptConsole) ReadLine(prompt string) (string, error) {
+func (r AppleScriptConsole) ReadLine(prompt string) (string, error) {
 	dialog := mack.DialogOptions{
 		Text:   prompt,
 		Title:  prompt,
@@ -40,7 +41,7 @@ func (r *AppleScriptConsole) ReadLine(prompt string) (string, error) {
 	return response.Text, nil
 }
 
-func (r *AppleScriptConsole) ReadInt(prompt string) (int, error) {
+func (r AppleScriptConsole) ReadInt(prompt string) (int, error) {
 	dialog := mack.DialogOptions{
 		Text:   prompt,
 		Title:  prompt,
@@ -63,7 +64,7 @@ func (r *AppleScriptConsole) ReadInt(prompt string) (int, error) {
 	return i, nil
 }
 
-func (r *AppleScriptConsole) ReadPassword(prompt string) (string, error) {
+func (r AppleScriptConsole) ReadPassword(prompt string) (string, error) {
 	dialog := mack.DialogOptions{
 		Text:         prompt,
 		Title:        prompt,
@@ -90,7 +91,7 @@ func (r *AppleScriptConsole) ReadPassword(prompt string) (string, error) {
 //  message string     // Required - The message explaining the choices
 //  prompt string      // Required - The prompt for input
 //  options string     // Required - The options given in the dialog box
-func (r *AppleScriptConsole) Option(message string, prompt string, options []string) (int, error) {
+func (r AppleScriptConsole) Option(message string, prompt string, options []string) (int, error) {
 	if len(options) == 0 {
 		return -1, fmt.Errorf("No options available for selection")
 	}

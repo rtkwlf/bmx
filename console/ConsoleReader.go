@@ -39,7 +39,7 @@ func openTty() (*os.File, error) {
 	return tty, nil
 }
 
-func (r *DefaultConsoleReader) Print(prompt string) error {
+func (r DefaultConsoleReader) Print(prompt string) error {
 	if r.Tty {
 		tty, err := openTty()
 		if err != nil {
@@ -52,7 +52,7 @@ func (r *DefaultConsoleReader) Print(prompt string) error {
 	}
 	return nil
 }
-func (r *DefaultConsoleReader) Println(prompt string) error {
+func (r DefaultConsoleReader) Println(prompt string) error {
 	if r.Tty {
 		tty, err := openTty()
 		if err != nil {
@@ -66,7 +66,7 @@ func (r *DefaultConsoleReader) Println(prompt string) error {
 	return nil
 }
 
-func (r *DefaultConsoleReader) ReadLine(prompt string) (string, error) {
+func (r DefaultConsoleReader) ReadLine(prompt string) (string, error) {
 	scanner := bufio.NewScanner(os.Stdin)
 	r.Print(prompt)
 
@@ -79,7 +79,7 @@ func (r *DefaultConsoleReader) ReadLine(prompt string) (string, error) {
 	return s, nil
 }
 
-func (r *DefaultConsoleReader) ReadInt(prompt string) (int, error) {
+func (r DefaultConsoleReader) ReadInt(prompt string) (int, error) {
 	var s string
 	var err error
 	if s, err = r.ReadLine(prompt); err != nil {
@@ -94,7 +94,7 @@ func (r *DefaultConsoleReader) ReadInt(prompt string) (int, error) {
 	return i, nil
 }
 
-func (r *DefaultConsoleReader) ReadPassword(prompt string) (string, error) {
+func (r DefaultConsoleReader) ReadPassword(prompt string) (string, error) {
 	r.Print(prompt)
 	pass, err := terminal.ReadPassword(int(syscall.Stdin))
 	if err != nil {
@@ -105,7 +105,7 @@ func (r *DefaultConsoleReader) ReadPassword(prompt string) (string, error) {
 	return string(pass[:]), nil
 }
 
-func (r *DefaultConsoleReader) Option(message string, prompt string, options []string) (int, error) {
+func (r DefaultConsoleReader) Option(message string, prompt string, options []string) (int, error) {
 	if len(options) == 0 {
 		return -1, fmt.Errorf("No options available for selection")
 	}

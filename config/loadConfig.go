@@ -41,6 +41,7 @@ type UserConfig struct {
 	Profile             string
 	AssumeRole          string
 	Factor              string
+	UseAppleScript      bool
 }
 
 func NewUserConfig() UserConfig {

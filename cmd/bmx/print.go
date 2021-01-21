@@ -54,13 +54,13 @@ var printCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		mergedOptions := mergePrintOptions(userConfig, printOptions)
 
-		oktaClient, err := okta.NewOktaClient(mergedOptions.Org, applescriptrw)
+		oktaClient, err := okta.NewOktaClient(mergedOptions.Org, consolerw)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		awsProvider := aws.NewAwsServiceProvider(applescriptrw)
-		command := bmx.Print(oktaClient, awsProvider, applescriptrw, mergedOptions)
+		awsProvider := aws.NewAwsServiceProvider(consolerw)
+		command := bmx.Print(oktaClient, awsProvider, consolerw, mergedOptions)
 		fmt.Println(command)
 	},
 }
