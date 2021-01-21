@@ -56,7 +56,7 @@ type AwsServiceProvider struct {
 	UserOutput  *os.File
 }
 
-func FindAwsRoleByName(name string, roles []AwsRole) (role AwsRole, err error) {
+func FindAwsRoleByName(name string, roles []AwsRole) (AwsRole, error) {
 	for _, role := range roles {
 		if strings.EqualFold(role.Name, name) {
 			return role, nil
