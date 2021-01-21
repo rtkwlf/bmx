@@ -32,14 +32,10 @@ type OktaSessionCache struct {
 }
 
 const (
-	sessionFileName = "sessions"
+	sessionFileName = "sessions-temp"
 )
 
 type OktaSessionStorage struct{}
-
-const (
-	sessionFileName = "sessions-temp"
-)
 
 func (o *OktaSessionStorage) SaveSessions(sessions []OktaSessionCache) {
 	sessionsJSON, _ := json.Marshal(sessions)
