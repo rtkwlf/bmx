@@ -40,6 +40,8 @@ func (a AwsServiceProviderMock) AssumeRole(creds sts.Credentials, targetRole str
 	return nil, nil
 }
 
-func (a AwsServiceProviderMock) ListRoles(saml string) (role []bmxaws.AwsRole, err error) {
-	return role, err
+func (a AwsServiceProviderMock) ListRoles(saml string) (roles []bmxaws.AwsRole, err error) {
+	var role bmxaws.AwsRole
+	role.Name = "test_role"
+	return append(roles, role), err
 }
