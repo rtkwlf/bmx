@@ -32,7 +32,7 @@ type OktaSessionCache struct {
 }
 
 const (
-	sessionFileName = "sessions-temp"
+	sessionFileName = "sessions"
 )
 
 type OktaSessionStorage struct{}
