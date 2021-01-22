@@ -87,6 +87,10 @@ func (d ConfigLoader) LoadConfigs() UserConfig {
 		}
 	}
 
+	if config.Input == "" {
+		config.Input = UseConsole
+	}
+
 	return config
 }
 
