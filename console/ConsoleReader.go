@@ -11,22 +11,43 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
+// ConsoleReader is an interface for receiving user input.
 type ConsoleReader interface {
 	ReadLine(prompt string) (string, error)
 	ReadPassword(prompt string) (string, error)
 	ReadInt(prompt string) (int, error)
-	Option(message string, prompt string, options []string) (int, error)
-	Print(prompt string) error
-	Println(prompt string) error
+	Option(header string, prompt string, options []string) (int, error)
+	Print(message string) error
+	Println(message string) error
 }
 
+// DefaultConsoleReader is a console interface for emitting and receiving output.
 type DefaultConsoleReader struct {
 	Tty bool
 }
 
-func NewConsoleReader() *DefaultConsoleReader {
-	console := &DefaultConsoleReader{
-		Tty: false,
+// IsTtyAvailable attempts to open a tty connection, returning true if successful.
+//  console.IsTtyAvailable()  			// Check if tty can be opened
+//  result := console.IsTtyAvailable()  // Capture if tty is available
+func IsTtyAvailable() bool {
+	tty, err := openTty()
+	if err != nil {
+		return false
+	}
+	defer tty.Close()
+	return true
+}
+
+// NewConsoleReader creates a that reads from the console.
+//  reader := consolerw.NewConsoleReader(false)        // Write output to stderr
+//  reader := consolerw.NewConsoleReader(true)        // Write output to tty device
+//
+// Parameters:
+//
+//  tty bool      // Required - True if output should be written to tty; false otherwise.
+func NewConsoleReader(tty bool) DefaultConsoleReader {
+	console := DefaultConsoleReader{
+		Tty: tty,
 	}
 	return console
 }
@@ -39,34 +60,53 @@ func openTty() (*os.File, error) {
 	return tty, nil
 }
 
-func (r *DefaultConsoleReader) Print(prompt string) error {
+// Print writes the message to the output channel.
+//  err := consolerw.Print("List of Items")        // Display text to the console.
+//
+// Parameters:
+//
+//  message string      // Required - The message to be written to console.
+func (r DefaultConsoleReader) Print(message string) error {
 	if r.Tty {
 		tty, err := openTty()
 		if err != nil {
 			log.Fatalf("Cannot open tty port: %v\n", err)
 		}
 		defer tty.Close()
-		fmt.Fprint(tty, prompt)
+		fmt.Fprint(tty, message)
 	} else {
-		fmt.Fprint(os.Stderr, prompt)
-	}
-	return nil
-}
-func (r *DefaultConsoleReader) Println(prompt string) error {
-	if r.Tty {
-		tty, err := openTty()
-		if err != nil {
-			log.Fatalf("Cannot open tty port: %v\n", err)
-		}
-		defer tty.Close()
-		fmt.Fprintln(tty, prompt)
-	} else {
-		fmt.Fprintln(os.Stderr, prompt)
+		fmt.Fprint(os.Stderr, message)
 	}
 	return nil
 }
 
-func (r *DefaultConsoleReader) ReadLine(prompt string) (string, error) {
+// Println writes the message to the output channel with a newline.
+//  err := consolerw.Println("List of Items")        // Display text to the console.
+//
+// Parameters:
+//
+//  message string      // Required - The message to be written to console.
+func (r DefaultConsoleReader) Println(message string) error {
+	if r.Tty {
+		tty, err := openTty()
+		if err != nil {
+			log.Fatalf("Cannot open tty port: %v\n", err)
+		}
+		defer tty.Close()
+		fmt.Fprintln(tty, message)
+	} else {
+		fmt.Fprintln(os.Stderr, message)
+	}
+	return nil
+}
+
+// ReadLine prompts the console for input with a prompt.
+//  text, err := consolerw.ReadLine("Selection:")        // Prompt for selection
+//
+// Parameters:
+//
+//  prompt string      // Required - The prompt for input.
+func (r DefaultConsoleReader) ReadLine(prompt string) (string, error) {
 	scanner := bufio.NewScanner(os.Stdin)
 	r.Print(prompt)
 
@@ -79,7 +119,13 @@ func (r *DefaultConsoleReader) ReadLine(prompt string) (string, error) {
 	return s, nil
 }
 
-func (r *DefaultConsoleReader) ReadInt(prompt string) (int, error) {
+// ReadInt prompts the console for an integer input with a prompt.
+//  index, err := consolerw.ReadInt("Selection:")        // Prompt for selection
+//
+// Parameters:
+//
+//  prompt string      // Required - The prompt for integer.
+func (r DefaultConsoleReader) ReadInt(prompt string) (int, error) {
 	var s string
 	var err error
 	if s, err = r.ReadLine(prompt); err != nil {
@@ -98,7 +144,13 @@ func (r *DefaultConsoleReader) ReadInt(prompt string) (int, error) {
 	return i, nil
 }
 
-func (r *DefaultConsoleReader) ReadPassword(prompt string) (string, error) {
+// ReadPassword prompts the console for a password input with a prompt.
+//  passw, err := consolerw.ReadPassword("Password:")        // Prompt for password
+//
+// Parameters:
+//
+//  prompt string      // Required - The prompt for input.
+func (r DefaultConsoleReader) ReadPassword(prompt string) (string, error) {
 	r.Print(prompt)
 	pass, err := terminal.ReadPassword(int(syscall.Stdin))
 	if err != nil {
@@ -109,7 +161,15 @@ func (r *DefaultConsoleReader) ReadPassword(prompt string) (string, error) {
 	return string(pass[:]), nil
 }
 
-func (r *DefaultConsoleReader) Option(message string, prompt string, options []string) (int, error) {
+// Option displays a list of options, prompting the console for a selection.
+//  consolerw.Option("Message text", "Action", []string{"hello", "world"})  // Display a list of hello and world, zero indexed for selection.
+//
+// Parameters:
+//
+//  header string     // Required - The header of the list selection
+//  prompt string      // Required - The prompt for input
+//  options string     // Required - The options given in the list
+func (r DefaultConsoleReader) Option(header string, prompt string, options []string) (int, error) {
 	if len(options) == 0 {
 		return -1, fmt.Errorf("No options available for selection")
 	}
@@ -118,7 +178,7 @@ func (r *DefaultConsoleReader) Option(message string, prompt string, options []s
 		return 0, nil
 	}
 
-	r.Println(message)
+	r.Println(header)
 	for idx, option := range options {
 		r.Println(fmt.Sprintf("[%d] %s", idx, option))
 	}

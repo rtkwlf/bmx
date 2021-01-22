@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/rtkwlf/bmx/config"
+	"github.com/rtkwlf/bmx/console"
 
 	"github.com/rtkwlf/bmx/saml/identityProviders/okta"
 	"github.com/rtkwlf/bmx/saml/serviceProviders/aws"
@@ -38,7 +39,7 @@ var processCmd = &cobra.Command{
 		// Override the output device for the edge case
 		// of credential-process. Until a more compatible option is selected,
 		// this will be used.
-		consolerw.Tty = true
+		consolerw = console.NewConsoleReader(true)
 
 		mergedOptions := mergeProcessOptions(userConfig, processOptions)
 

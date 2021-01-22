@@ -28,12 +28,12 @@ import (
 
 var (
 	userConfig config.UserConfig
-	consolerw  *console.DefaultConsoleReader
+	consolerw  console.ConsoleReader
 )
 
 func init() {
 	userConfig = (config.ConfigLoader{}).LoadConfigs()
-	consolerw = console.NewConsoleReader()
+	consolerw = console.NewConsoleReader(false)
 }
 
 func main() {
