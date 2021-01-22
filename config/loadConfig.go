@@ -32,16 +32,29 @@ const (
 	projectFileName = ".bmx"
 )
 
+const (
+	// UseConsole tries to use the console first, then falls back on
+	// other input methods.
+	UseConsole = "console"
+
+	// UseAppleScriptLimited tries to use the console first, and uses
+	// AppleScript first when in limited.
+	UseAppleScriptLimited = "applescript"
+
+	// AlwaysUseAppleScript tries to use AppleScript for input always.
+	AlwaysUseAppleScript = "always_applescript"
+)
+
 type UserConfig struct {
-	AllowProjectConfigs  bool
-	Org                  string
-	User                 string
-	Account              string
-	Role                 string
-	Profile              string
-	AssumeRole           string
-	Factor               string
-	AlwaysUseAppleScript bool
+	AllowProjectConfigs bool
+	Org                 string
+	User                string
+	Account             string
+	Role                string
+	Profile             string
+	AssumeRole          string
+	Factor              string
+	Input               string
 }
 
 func NewUserConfig() UserConfig {

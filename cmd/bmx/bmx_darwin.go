@@ -7,17 +7,21 @@ import (
 	"github.com/rtkwlf/bmx/console"
 )
 
-func selectConsoleReader(userConfig config.UserConfig, checkTty bool) console.ConsoleReader {
-	if userConfig.AlwaysUseAppleScript {
+func selectConsoleReader(userConfig config.UserConfig, limited bool) console.ConsoleReader {
+	if userConfig.Input == config.AlwaysUseAppleScript {
 		return console.NewAppleScriptReader()
 	}
 
-	if checkTty {
-		if console.IsTtyAvailable() {
-			return console.NewConsoleReader(true)
-		}
+	if !limited {
+		return console.NewConsoleReader(false)
+	}
+
+	if userConfig.Input == config.UseAppleScriptLimited {
 		return console.NewAppleScriptReader()
 	}
 
-	return console.NewConsoleReader(false)
+	if console.IsTtyAvailable() {
+		return console.NewConsoleReader(true)
+	}
+	return console.NewAppleScriptReader()
 }
