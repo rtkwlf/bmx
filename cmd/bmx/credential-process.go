@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/rtkwlf/bmx/config"
-	"github.com/rtkwlf/bmx/console"
 
 	"github.com/rtkwlf/bmx/saml/identityProviders/okta"
 	"github.com/rtkwlf/bmx/saml/serviceProviders/aws"
@@ -36,11 +35,7 @@ var processCmd = &cobra.Command{
 	Short: "Credentials to awscli",
 	Long:  `Supply the credentials in compatible format`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if !userConfig.AlwaysUseAppleScript && console.IsTtyAvailable() {
-			consolerw = *console.NewAppleScriptReader()
-		} else {
-			consolerw = *console.NewConsoleReader(true)
-		}
+		consolerw = getInputReader(userConfig, true)
 		mergedOptions := mergeProcessOptions(userConfig, processOptions)
 
 		oktaClient, err := okta.NewOktaClient(mergedOptions.Org, consolerw)

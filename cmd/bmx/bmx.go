@@ -33,14 +33,7 @@ var (
 
 func init() {
 	userConfig = (config.ConfigLoader{}).LoadConfigs()
-
-	// Check if tty is available. If so, go for console read
-	// Should we always use applescript?
-	if userConfig.AlwaysUseAppleScript {
-		consolerw = *console.NewAppleScriptReader()
-	} else {
-		consolerw = *console.NewConsoleReader(false)
-	}
+	consolerw = getInputReader(userConfig, false)
 }
 
 func main() {
