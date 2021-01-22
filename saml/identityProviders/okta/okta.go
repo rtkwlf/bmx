@@ -341,7 +341,7 @@ func (o *OktaClient) verifyTotpMfa(oktaAuthResponse *OktaAuthResponse, selectedF
 	if err != nil {
 		return err
 	}
-	body := fmt.Sprintf(`{"stateToken":"%s","passCode":"%s"}`, oktaAuthResponse.StateToken, code)
+	body := fmt.Sprintf(`{"stateToken":"%s","passCode":"%s"}`, oktaAuthResponse.StateToken, strings.TrimSpace(code)))
 	authResponse, err := o.HttpClient.Post(selectedFactor.Links.Verify.Url, "application/json", strings.NewReader(body))
 	if err != nil {
 		return err
