@@ -24,9 +24,9 @@ type DefaultConsoleReader struct {
 	Tty bool
 }
 
-func NewConsoleReader() *DefaultConsoleReader {
+func NewConsoleReader(bool tty) *DefaultConsoleReader {
 	console := &DefaultConsoleReader{
-		Tty: false,
+		Tty: tty,
 	}
 	return console
 }
