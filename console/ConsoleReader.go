@@ -38,6 +38,13 @@ func IsTtyAvailable() bool {
 	return true
 }
 
+// NewConsoleReader creates a that reads from the console.
+//  reader := consolerw.NewConsoleReader(false)        // Write output to stderr
+//  reader := consolerw.NewConsoleReader(true)        // Write output to tty device
+//
+// Parameters:
+//
+//  tty bool      // Required - True if output should be written to tty; false otherwise.
 func NewConsoleReader(tty bool) DefaultConsoleReader {
 	console := DefaultConsoleReader{
 		Tty: tty,
