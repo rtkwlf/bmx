@@ -8,20 +8,42 @@ import (
 	"github.com/andybrewer/mack"
 )
 
+// AppleScriptConsole is a MacOS gui interface for receiving input.
 type AppleScriptConsole struct {
 }
 
+// NewAppleScriptReader creates an interface that reads input using AppleScript.
+//  ascript := consolerw.NewAppleScriptReader()  // New AppleScript interface
 func NewAppleScriptReader() AppleScriptConsole {
 	return AppleScriptConsole{}
 }
 
+// Print writes the message a desktop notification.
+//  err := consolerw.Print("List of Items")        // Display text as notification
+//
+// Parameters:
+//
+//  message string      // Required - The message to be written to desktop notification.
 func (r AppleScriptConsole) Print(prompt string) error {
 	return mack.Notify(prompt)
 }
+
+// Println writes the message a desktop notification.
+//  err := consolerw.Print("List of Items")        // Display text as notification
+//
+// Parameters:
+//
+//  message string      // Required - The message to be written to desktop notification.
 func (r AppleScriptConsole) Println(prompt string) error {
 	return mack.Notify(prompt)
 }
 
+// ReadLine triggers a desktop dialog box with a text prompt.
+//  text, err := consolerw.ReadLine("Selection:")   // Prompt for text
+//
+// Parameters:
+//
+//  prompt string      // Required - The prompt for input.
 func (r AppleScriptConsole) ReadLine(prompt string) (string, error) {
 	dialog := mack.DialogOptions{
 		Text:   prompt,
@@ -39,6 +61,12 @@ func (r AppleScriptConsole) ReadLine(prompt string) (string, error) {
 	return response.Text, nil
 }
 
+// ReadInt triggers a desktop dialog box with a integer prompt.
+//  index, err := consolerw.ReadInt("Selection:")   // Prompt for integer value
+//
+// Parameters:
+//
+//  prompt string      // Required - The prompt for input.
 func (r AppleScriptConsole) ReadInt(prompt string) (int, error) {
 	dialog := mack.DialogOptions{
 		Text:   prompt,
@@ -62,6 +90,12 @@ func (r AppleScriptConsole) ReadInt(prompt string) (int, error) {
 	return i, nil
 }
 
+// ReadPassword triggers a desktop dialog box for receiving password input.
+//  passwd, err := consolerw.ReadPassword("Selection:")   // Prompt for password value
+//
+// Parameters:
+//
+//  prompt string      // Required - The prompt for input.
 func (r AppleScriptConsole) ReadPassword(prompt string) (string, error) {
 	dialog := mack.DialogOptions{
 		Text:         prompt,
