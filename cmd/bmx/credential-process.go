@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/rtkwlf/bmx/config"
-	"github.com/rtkwlf/bmx/console"
 
 	"github.com/rtkwlf/bmx/saml/identityProviders/okta"
 	"github.com/rtkwlf/bmx/saml/serviceProviders/aws"
@@ -36,11 +35,7 @@ var processCmd = &cobra.Command{
 	Short: "Credentials to awscli",
 	Long:  `Supply the credentials in compatible format`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Override the output device for the edge case
-		// of credential-process. Until a more compatible option is selected,
-		// this will be used.
-		consolerw = console.NewConsoleReader(true)
-
+		consolerw = selectConsoleReader(userConfig, true)
 		mergedOptions := mergeProcessOptions(userConfig, processOptions)
 
 		oktaClient, err := okta.NewOktaClient(mergedOptions.Org, consolerw)

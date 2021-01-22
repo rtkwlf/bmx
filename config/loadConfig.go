@@ -32,6 +32,19 @@ const (
 	projectFileName = ".bmx"
 )
 
+const (
+	// UseConsole tries to use the console first, then falls back on
+	// other input methods.
+	UseConsole = "console"
+
+	// UseAppleScriptLimited tries to use the console first, and uses
+	// AppleScript first when in limited.
+	UseAppleScriptLimited = "applescript"
+
+	// AlwaysUseAppleScript tries to use AppleScript for input always.
+	AlwaysUseAppleScript = "always_applescript"
+)
+
 type UserConfig struct {
 	AllowProjectConfigs bool
 	Org                 string
@@ -41,6 +54,7 @@ type UserConfig struct {
 	Profile             string
 	AssumeRole          string
 	Factor              string
+	Input               string
 }
 
 func NewUserConfig() UserConfig {
@@ -71,6 +85,10 @@ func (d ConfigLoader) LoadConfigs() UserConfig {
 				log.Fatalf("Error reflecting config from [%s]\n%s", projectConfigFile, err)
 			}
 		}
+	}
+
+	if config.Input == "" {
+		config.Input = UseConsole
 	}
 
 	return config

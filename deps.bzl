@@ -2,6 +2,13 @@ load("@bazel_gazelle//:deps.bzl", "go_repository")
 
 def go_dependencies():
     go_repository(
+        name = "com_github_andybrewer_mack",
+        importpath = "github.com/andybrewer/mack",
+        sum = "h1:uZMWs9VZiUv6J6gHdlDUA4Y11ckPLe+qYagoHfQb6BY=",
+        version = "v0.0.0-20200226161639-15be3d47cc54",
+    )
+
+    go_repository(
         name = "com_github_aws_aws_sdk_go",
         importpath = "github.com/aws/aws-sdk-go",
         sum = "h1:zbJZKkxeDiYxUYFjymjWxPye+qa1G2gRVyhIzZrB9zA=",

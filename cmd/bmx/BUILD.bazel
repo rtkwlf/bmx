@@ -4,6 +4,8 @@ go_library(
     name = "go_default_library",
     srcs = [
         "bmx.go",
+        "bmx_darwin.go",
+        "bmx_default.go",
         "config.go",
         "credential-process.go",
         "login.go",
