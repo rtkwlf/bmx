@@ -24,9 +24,9 @@ type DefaultConsoleReader struct {
 	Tty bool
 }
 
-func NewConsoleReader() *DefaultConsoleReader {
+func NewConsoleReader(useTty bool) *DefaultConsoleReader {
 	console := &DefaultConsoleReader{
-		Tty: false,
+		Tty: useTty,
 	}
 	return console
 }
@@ -37,6 +37,15 @@ func openTty() (*os.File, error) {
 		return tty, err
 	}
 	return tty, nil
+}
+
+func IsTtyAvailable() bool {
+	tty, err := openTty()
+	if err != nil {
+		return false
+	}
+	defer tty.Close()
+	return true
 }
 
 func (r DefaultConsoleReader) Print(prompt string) error {

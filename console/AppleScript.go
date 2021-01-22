@@ -9,7 +9,6 @@ import (
 )
 
 type AppleScriptConsole struct {
-	Tty bool
 }
 
 func NewAppleScriptReader() *AppleScriptConsole {

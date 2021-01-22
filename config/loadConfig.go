@@ -33,15 +33,15 @@ const (
 )
 
 type UserConfig struct {
-	AllowProjectConfigs bool
-	Org                 string
-	User                string
-	Account             string
-	Role                string
-	Profile             string
-	AssumeRole          string
-	Factor              string
-	UseAppleScript      bool
+	AllowProjectConfigs  bool
+	Org                  string
+	User                 string
+	Account              string
+	Role                 string
+	Profile              string
+	AssumeRole           string
+	Factor               string
+	AlwaysUseAppleScript bool
 }
 
 func NewUserConfig() UserConfig {
