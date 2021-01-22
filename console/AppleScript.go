@@ -11,9 +11,8 @@ import (
 type AppleScriptConsole struct {
 }
 
-func NewAppleScriptReader() *AppleScriptConsole {
-	console := &AppleScriptConsole{}
-	return console
+func NewAppleScriptReader() AppleScriptConsole {
+	return AppleScriptConsole{}
 }
 
 func (r AppleScriptConsole) Print(prompt string) error {

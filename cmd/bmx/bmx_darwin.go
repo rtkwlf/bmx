@@ -9,15 +9,15 @@ import (
 
 func selectConsoleReader(userConfig config.UserConfig, checkTty bool) console.ConsoleReader {
 	if userConfig.AlwaysUseAppleScript {
-		return *console.NewAppleScriptReader()
+		return console.NewAppleScriptReader()
 	}
 
 	if checkTty {
 		if console.IsTtyAvailable() {
-			return *console.NewConsoleReader(true)
+			return console.NewConsoleReader(true)
 		}
-		return *console.NewAppleScriptReader()
+		return console.NewAppleScriptReader()
 	}
 
-	return *console.NewConsoleReader(false)
+	return console.NewConsoleReader(false)
 }

@@ -12,9 +12,9 @@ import (
 func selectConsoleReader(userConfig config.UserConfig, checkTty bool) console.ConsoleReader {
 	if checkTty {
 		if console.IsTtyAvailable() {
-			return *console.NewConsoleReader(true)
+			return console.NewConsoleReader(true)
 		}
-		log.Fatal("Cannot instantiate a mechanism for input")
+		log.Fatal("Cannot create tty connection for writing output")
 	}
-	return *console.NewConsoleReader(false)
+	return console.NewConsoleReader(false)
 }
