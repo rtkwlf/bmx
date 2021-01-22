@@ -35,7 +35,7 @@ var processCmd = &cobra.Command{
 	Short: "Credentials to awscli",
 	Long:  `Supply the credentials in compatible format`,
 	Run: func(cmd *cobra.Command, args []string) {
-		consolerw = getInputReader(userConfig, true)
+		consolerw = selectConsoleReader(userConfig, true)
 		mergedOptions := mergeProcessOptions(userConfig, processOptions)
 
 		oktaClient, err := okta.NewOktaClient(mergedOptions.Org, consolerw)

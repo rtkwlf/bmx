@@ -7,7 +7,7 @@ import (
 	"github.com/rtkwlf/bmx/console"
 )
 
-func getInputReader(userConfig config.UserConfig, checkTty bool) console.ConsoleReader {
+func selectConsoleReader(userConfig config.UserConfig, checkTty bool) console.ConsoleReader {
 	if userConfig.AlwaysUseAppleScript {
 		return *console.NewAppleScriptReader()
 	}

@@ -33,7 +33,7 @@ var (
 
 func init() {
 	userConfig = (config.ConfigLoader{}).LoadConfigs()
-	consolerw = getInputReader(userConfig, false)
+	consolerw = selectConsoleReader(userConfig, false)
 }
 
 func main() {
