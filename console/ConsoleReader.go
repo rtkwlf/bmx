@@ -86,6 +86,10 @@ func (r *DefaultConsoleReader) ReadInt(prompt string) (int, error) {
 		return -1, err
 	}
 
+	if s == "" {
+		return -1, fmt.Errorf("Input is an empty string, and not valid")
+	}
+
 	var i int
 	if i, err = strconv.Atoi(s); err != nil {
 		return -1, err
