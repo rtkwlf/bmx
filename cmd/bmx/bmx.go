@@ -28,7 +28,7 @@ import (
 
 var (
 	userConfig config.UserConfig
-	consolerw  *console.ConsoleReader
+	consolerw  console.ConsoleReader
 )
 
 func init() {
