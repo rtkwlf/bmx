@@ -1,12 +1,12 @@
 {
     "unsafeptr": {
       "exclude_files": {
-        "external/": "external dependencies"
+        "external": "External dependencies"
       }
     },
     "unreachable": {
       "exclude_files": {
-        "external/": "external dependencies"
+        "external": "External dependencies"
       }
     }
   }
