@@ -11,3 +11,7 @@ The available options are [`console`, `applescript`, `always_applescript`], with
 - `always_applescript` tries to use AppleScript for input always.
 
 The default input mode is `console`.
+
+## Non-interactive Context
+
+There may be a context where no interaction is possible (or accessible). In these cases `bmx login` can be used to retrieve a session ahead of time in an interactive context. If all needed input are provided, commands can then run in a non-interactive context.
