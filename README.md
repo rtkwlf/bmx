@@ -38,6 +38,7 @@ load this file automatically and populate the parameters where appropriate.
 | role | string | `-` | The AWS role to assume. |
 | profile | string | `-` | The profile to `write` in `~/.aws/credentials`. |
 | factor | `(push,token:software:totp)` | `-` | The desired multi-factor authentication factor-type to use. |
+| input | `(console,applescript,always_applescript)` | `console` | The intended behaviour for requesting user input. See (docs/input.md)[docs/input.md] |
 
 ### Project Scoped Configurations
 
