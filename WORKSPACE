@@ -18,7 +18,6 @@ go_rules_dependencies()
 go_register_toolchains(
     version = "1.15.5",
     nogo = "@//:nogo",
-    # nogo = "@io_bazel_rules_go//:tools_nogo"
 )
 
 http_archive(
