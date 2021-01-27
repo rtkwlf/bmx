@@ -40,13 +40,11 @@ jobs:
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
       - name: Build
-        run: go build -o bmx ./cmd/bmx/.
-      - name: Vet
-        run: go vet ./...
+        run: bazel build //...
       - name: Test
-        run: go test -v -covermode="count" -coverprofile="profile.cov" ./...
+        run: bazel test //...
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: bmx-${{ matrix.platform }}-${{ matrix.go-version }}
-          path: bmx
+          path: bazel-bin/cmd/bmx/bmx
