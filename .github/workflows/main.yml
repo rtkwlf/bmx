@@ -5,7 +5,6 @@ on:
       - .github/workflows/main.yml
       - "**/*.go"
       - "**/*.bazel"
-      - "nogo_config.json"
       - ".bazelrc"
       - "go.mod"
       - "go.sum"
@@ -21,17 +20,33 @@ jobs:
     env:
       GO111MODULE: on
     steps:
+      - name: Install Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: ${{ matrix.go-version }}
       - name: Checkout code
         uses: actions/checkout@v1
       - name: Format
         run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
         if: matrix.os == 'ubuntu-latest'
+      - name: Cache Go modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            $GOPATH/pkg/mod/cache/
+          key: ${{ runner.os }}-build-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
       - name: Build
-        run: bazel build //...
+        run: go build -o bmx ./cmd/bmx/.
+      - name: Vet
+        run: go vet ./...
       - name: Test
-        run: bazel test //...
+        run: go test -v -covermode="count" -coverprofile="profile.cov" ./...
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: bmx-${{ matrix.platform }}-${{ matrix.go-version }}
-          path: bazel-bin/cmd/bmx/bmx_/bmx*
+          path: bmx
