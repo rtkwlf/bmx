@@ -49,4 +49,4 @@ Note that you must enable this feature with `allow_project_configs=true` in the 
 | assume_role | string | `-` | An AWS role arn that will be assumed when calling `print`. |
 | profile | string | `-` | The profile to `write` in `~/.aws/credentials`. |
 | factor | `(push,token:software:totp)` | `-` | The desired multi-factor authentication factor-type to use. |
-| input | `(console,applescript,always_applescript)` | `console` | The intended behaviour for requesting user input. See input documentation. |
+| input | `(console,applescript,always_applescript)` | `console` | The intended behaviour for requesting user input. See [input](./input.md) documentation. |
