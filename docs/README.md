@@ -27,13 +27,38 @@ You can confirm you have successfully configured bmx by running `bmx version`. I
 ### Logging into Okta
 
 
+```bash
+bmx login
+```
+
 ### Temporary Credentials from IAM
+
+```bash
+bmx print
+```
 
 ### User configuration
 
-## Advanced Configuration
+```bash
+mkdir -p ~/.bmx
+touch ~/.bmx/config
+```
+
+```ini
+org                   = acmeorg   # Okta organization
+user                  = john.doe  # Your okta username
+allow_project_configs = true      # Enable project-scoped configuration
+```
+
+Advanced configuration is covered by [advanced configuration](./config).
 
 ### Setting defaults
+
+```ini
+factor                = push                # Default to using 'push' multi-factor if available
+account               = 'AWS ACME'          # The name of the Okta AWS App to use for SSO
+role                  = 'ACME-SSODeveloper' # Use the 'Developer' SSO role for the account
+```
 
 ### Project Level Configurations
 
