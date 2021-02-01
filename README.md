@@ -11,104 +11,48 @@ BMX prints detailed usage information when you run `bmx -h` or `bmx <cmd> -h`.
 
 BMX was developed by D2L ([Brightspace/bmx](https://github.com/Brightspace/bmx/)), and modifications have been made to the project by Arctic Wolf.
 
+## Features
+
+1. BMX is multi-platform: it runs on Linux, Windows, and Mac.
+2. BMX maintains your Okta session for 12 hours: you enter your Okta password once a day, and BMX takes care of the rest.
+3. Project scoped configurations
+4. BMX supports Web and SMS MFA.
+
 ## Installation
 
 Available versions of BMX are available on the [releases](https://github.com/rtkwlf/bmx/releases) page. 
 
-## Features
+## Getting Started
 
-1. BMX is multi-platform: it runs on Linux, Windows, and Mac.
-1. BMX maintains your Okta session for 12 hours: you enter your Okta password once a day, and BMX takes care of the rest.
-1. Project scoped configurations
-1. BMX supports Web and SMS MFA.
+To authenticate and obtain a session via the command line, run the following:
 
-## Configuration Files
+```bash
+bmx login
+```
 
-Many of the commandline parameters for BMX can be specified in a configuration file located at `~/.bmx/config`. BMX will
-load this file automatically and populate the parameters where appropriate.
+This will prompt you for your Okta organization and credentials. When you have successfully connected, you can run the following to get a set of IAM STS credentials for use with the AWS API:
 
-### Configuration Parameters
+```bash
+bmx print
+```
 
-|name|type|default|description|
-| --- | --- | --- | --- |
-| allow_project_configs | bool | `false` | Setting this to true will enable the project scoped configuration feature described below. |
-| org | string | `-` | Specify the Okta org to connect to here. This value sets the api base URL for Okta calls (https://{org}.okta.com/). |
-| user | string | `-` | This is the username used when connecting to the identity provider. |
-| account | string | `-` | The AWS account to retrieve credentials for. |
-| role | string | `-` | The AWS role to assume. |
-| profile | string | `-` | The profile to `write` in `~/.aws/credentials`. |
-| factor | `(push,token:software:totp)` | `-` | The desired multi-factor authentication factor-type to use. |
-| input | `(console,applescript,always_applescript)` | `console` | The intended behaviour for requesting user input. See (docs/input.md)[docs/input.md] |
+The command will print a series of environment set commands, that can be used to set the environment variables of the current shell session:
 
-### Project Scoped Configurations
+```bash
+export AWS_SESSION_TOKEN=...
+export AWS_ACCESS_KEY_ID=...
+export AWS_SECRET_ACCESS_KEY=...
 
-A project configuration scope can be defined by creating a `.bmx` file anywhere in your project's directory structure. 
-When running BMX in the folder with a `.bmx` file or in any folder nested beneath a `.bmx` file, BMX will walk up the 
-hierarchy until it finds a `.bmx` file and overlay the configuration with the user scoped configuration file `~/.bmx/config`. 
-Note that you must enable this feature with `allow_project_configs=true` in the user configuration file.
+# Run AWSCLI using environment variables for credentials
+aws sts get-caller-identity
+```
+
+If you'd like to learn about the ways BMX assists with authenticating to AWS, you can review in the [getting started](./docs/) documentation.
 
 ## Versioning
 
 BMX is maintained under the [Semantic Versioning guidelines](http://semver.org/).
 
-## Development
-
-BMX is designed to be extensible and easily rolled out.
-
-* BMX is written in [Go](https://golang.org) and compiles into a single binary for distribution purposes
-  * It makes use of [Go modules](https://github.com/golang/go/wiki/Modules)
-  * Dependencies are [vendored](https://tip.golang.org/cmd/go/#hdr-Modules_and_vendoring) and everything is included in this repository to build locally 
-* BMX is a command-driven utility (think of Git, Terraform, or the AWS CLI) leveraging the [cobra](https://github.com/spf13/cobra) library. New commands can be added to the base system with relative ease.
-
-### Developer Setup
-
-```sh
-go get github.com/rtkwlf/bmx
-```
-
-### Building
-
-```bash
-go build github.com/rtkwlf/bmx/cmd/bmx
-
-bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //cmd/bmx:bmx
-bazel build --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64 //cmd/bmx:bmx
-bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //cmd/bmx:bmx
-```
-
 ### Getting Involved
 
-BMX has [issues](https://github.com/rtkwlf/bmx/issues).
-
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## Usage Examples
-
-### Getting Help
-
-```bash
-$ bmx -h
-
-Usage:
-   [command]
-
-Available Commands:
-  credential-process Credentials to awscli
-  help               Help about any command
-  print              Print to screen
-  version            Print BMX version and exit
-  write              Write to aws credential file
-
-Flags:
-  -h, --help   help for this command
-
-Use " [command] --help" for more information about a command.
-```
-
-### Sample ~/.bmx/config
-
-```ini
-allow_project_configs=true
-org=my_okta_org
-user=my_user
-```
