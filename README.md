@@ -30,7 +30,7 @@ To authenticate and obtain a session via the command line, run the following:
 bmx login
 ```
 
-This will prompt you for your Okta organization and credentials. When you have successfully connected, you run the following to get a set of IAM STS credentials for use with the AWS API:
+This will prompt you for your Okta organization and credentials. When you have successfully connected, you can run the following to get a set of IAM STS credentials for use with the AWS API:
 
 ```bash
 bmx print
@@ -38,10 +38,13 @@ bmx print
 
 The command will print a series of environment set commands, that can be used to set the environment variables of the current shell session:
 
-```
+```bash
 export AWS_SESSION_TOKEN=...
 export AWS_ACCESS_KEY_ID=...
 export AWS_SECRET_ACCESS_KEY=...
+
+# Run AWSCLI using environment variables for credentials
+aws sts get-caller-identity
 ```
 
 If you'd like to learn about the ways BMX assists with authenticating to AWS, you can review in the [getting started](./docs/) documentation.

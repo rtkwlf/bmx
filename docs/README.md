@@ -2,7 +2,7 @@
 
 ## Installing Bmx
 
-BMX is available on GitHub in the [releases](https://github.com/rtkwlf/bmx/releases) page. This lists all available versions of BMX that can be installed. Download and unzip the file
+BMX is available on GitHub in the [releases](https://github.com/rtkwlf/bmx/releases) page. This lists all available versions of BMX that can be installed. Download and unzip the file, copying the `bmx` binary into a folder in your `$PATH`.
 
 > :warning: **If you are a member of Arctic Wolf**: Do not install from here. Consult internal docs.
 
@@ -20,7 +20,7 @@ go get -v -u github.com/rtkwlf/bmx/...
 
 ## Using BMX
 
-The following is a quick introduction to BMX through a series of steps to get started using BMX for authentication to AWS Accounts. For background, BMX uses SAML resources configured in an AWS Account to retrieve STS credentials. These can then be used to interact with the AWS API.
+The following is a quick introduction to BMX for authentication to AWS Accounts. For background, BMX uses SAML resources configured in an AWS Account to retrieve IAM STS credentials. These can then be used to interact with the AWS API.
 
 Setting up an Okta AWS App in an AWS Account requires creating IAM roles in an AWS Account that will be assumed with SAML. Typically this account is a 'IAM/SSO'-only account. This means that no services are deployed in the account, and the IAM roles in the account are restricted to `AssumeRole` permissions. From this account, you can `AssumeRole` into other accounts in the organization where you will have development permissions (as needed).
 
@@ -36,7 +36,7 @@ To authenticate and obtain a session via the command line, enter the following v
 bmx login
 ```
 
-This will prompt you for your Okta organization, username, password, and multi-factor authentication if necessary. When complete, you will be told the session duration. This can be useful when starting for the day, as depending on the duration granted by the SAML IAM roles.
+This will prompt you for your Okta organization and credentials. When complete, you will be told the session duration. This can be useful when starting for the day, as depending on the duration granted by the SAML IAM roles it may exceed the traditional workday.
 
 You can consult [configuration](./config) to reduce the amount of inputs needed.
 
