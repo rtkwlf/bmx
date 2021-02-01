@@ -1,7 +1,17 @@
 {
+    "unsafeptr": {
+      "exclude_files": {
+        "external/*": "third party code"
+      }
+    },
     "unreachable": {
       "exclude_files": {
-        "external/": "external dependencies"
+        "external/*": "third party code"
+      }
+    },
+    "vet": {
+      "exclude_files": {
+        "external/*": "third party code"
       }
     }
   }
