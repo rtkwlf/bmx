@@ -1,4 +1,4 @@
-# Dependency Upgrades
+# Upgrading of Tools & Dependencies
 
 The following document describes the process for upgrading dependencies in the project.
 
@@ -14,7 +14,7 @@ The golang version is defined in `WORKSPACE` when registering the version of the
 
 You can upgrade the go dependencies by running the following commands:
 
-```
+```bash
 go get -u ./...
 go get -t -u ./...
 go mod tidy
