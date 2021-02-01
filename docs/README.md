@@ -22,6 +22,8 @@ The following is a quick introduction to Component through building a simple
 static site.  It demonstrates the basic use of component for compiling local
 javascript and css files and remote css files.
 
+You can confirm you have successfully configured bmx by running `bmx version`. If you installed from source, then the you should receive: `bmx/nostamp`
+
 ### Logging into Okta
 
 
