@@ -1,14 +1,16 @@
 # Developing with BMX
 
-BMX is built with bazel. 
-
-You can built the tool using the following:
+BMX uses bazel for local development, managing the golang toolchain. GitHub Actions is responsible for building and packaging releases of the tool.
 
 ## Setting up developer environment
 
-Project tooling is managed by bazel, and once you have installed bazelisk you should be able
+Project tooling is managed by bazel, and once you have installed [bazelisk](https://github.com/bazelbuild/bazelisk) you should be able to build the project by running:
 
-The project supports [devcontainers]() for quick configuration of an environment assuming you have a working environment.
+```bash
+bazel build //cmd/bmx:bmx
+```
+
+The project supports [devcontainers](https://code.visualstudio.com/docs/remote/containers) to allow for an isolated development environment to avoid conflict with an existing bmx installation on the developer machine. This may not always be needed for development.
 
 ## Building the project
 
