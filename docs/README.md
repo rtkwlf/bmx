@@ -2,7 +2,7 @@
 
 ## Installing Bmx
 
-BMX is avai. The [releases](https://github.com/rtkwlf/bmx/releases) page lists all available versions of BMX that can be installed. Download and unzip the file
+BMX is available on GitHub in the [releases](https://github.com/rtkwlf/bmx/releases) page. This lists all available versions of BMX that can be installed. Download and unzip the file
 
 Copy
 
@@ -37,9 +37,8 @@ javascript and css files and remote css files.
 
 ## Next steps
 
-If you want to learn different features of component step by
-step, you can try out the browse the [c8-experiments repo](https://github.com/timaschew/c8-experiments).
+If you want to learn different features of BMX, you can explore the [available commands](./commands) or the [configuration options](./config).
 
-There are also more [examples](https://github.com/componentjs/guide/blob/master/component/examples.md).
+There include examples of configurations and intended use-cases.
 
 -----
