@@ -1,10 +1,8 @@
 # Input Modes
 
-Bmx supports the user configuration parameter `input` to control behaviour around requesting user input. There exist cases where Bmx is run with no guarantee of terminal input. An example of this would be in the AWSCLI (credential_process)[https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sourcing-external.html] that sources credentials with an external process. To accomodate edge cases, bmx supports alternative input behaviours to ensure workflows continue without interruption.
+BMX supports controls to modify how user input is requested. This is necessary as BMX can execute in contexts where there is no console input. An example of this would be in the AWSCLI [credential_process](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sourcing-external.html) that sources credentials with an external process. This means that BMX can executed by the AWS tooling when no console is open. The alternative input models are built with the intention to ensure workflows like this can continue.
 
-The configuration `input` has been made available to change the behaviour of input device selection. This is intended to address scenarios where the determination of an available tty is incorrect, and the interface option needs to be overwritten.
-
-The available options are [`console`, `applescript`, `always_applescript`], with the options described as such:
+The user configuration `input` has been made available to change the behaviour of input device selection. This is intended to be flexible to address scenarios where a successful input device is difficult to create. The available options are described below:
 
 - `console` tries to use the console first, then falls back on other input methods.
 - `applescript` tries to use the console first, and uses AppleScript first when in limited.
@@ -14,4 +12,4 @@ The default input mode is `console`.
 
 ## Non-interactive Context
 
-There may be a context where no interaction is possible (or accessible). In these cases `bmx login` can be used to retrieve a session ahead of time in an interactive context. If all needed input are provided, commands can then run in a non-interactive context.
+There may be a context where no interaction is possible. In the event that you encounter such a case, you can use `bmx login` to retrieve a session ahead of time in an interactive context. If all needed input are provided to BMX, commands can run in a non-interactive context.
