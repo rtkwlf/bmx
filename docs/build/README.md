@@ -10,6 +10,12 @@ Project tooling is managed by bazel, and once you have installed [bazelisk](http
 bazel build //cmd/bmx:bmx
 ```
 
+And BMX itself can be run with bazel by leveraging the `run` command:
+
+```bash
+bazel run //cmd/bmx:bmx -- login
+```
+
 The project supports [devcontainers](https://code.visualstudio.com/docs/remote/containers) to allow for an isolated development environment to avoid conflict with an existing bmx installation on the developer machine. This may not always be needed for development.
 
 ## Building the project
