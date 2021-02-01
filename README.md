@@ -40,13 +40,6 @@ load this file automatically and populate the parameters where appropriate.
 | factor | `(push,token:software:totp)` | `-` | The desired multi-factor authentication factor-type to use. |
 | input | `(console,applescript,always_applescript)` | `console` | The intended behaviour for requesting user input. See (docs/input.md)[docs/input.md] |
 
-### Project Scoped Configurations
-
-A project configuration scope can be defined by creating a `.bmx` file anywhere in your project's directory structure. 
-When running BMX in the folder with a `.bmx` file or in any folder nested beneath a `.bmx` file, BMX will walk up the 
-hierarchy until it finds a `.bmx` file and overlay the configuration with the user scoped configuration file `~/.bmx/config`. 
-Note that you must enable this feature with `allow_project_configs=true` in the user configuration file.
-
 ## Versioning
 
 BMX is maintained under the [Semantic Versioning guidelines](http://semver.org/).
