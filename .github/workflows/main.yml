@@ -26,9 +26,9 @@ jobs:
       - name: Build
         run: bazel build --platforms=@io_bazel_rules_go//go/toolchain:${{matrix.platform}} //cmd/bmx:bmx
       - name: Test
-        run: bazel test //...
+        run: bazel test --platforms=@io_bazel_rules_go//go/toolchain:${{matrix.platform}} //...
       - name: Package
-        run: bazel build //:package
+        run: bazel build --platforms=@io_bazel_rules_go//go/toolchain:${{matrix.platform}} //:package
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
