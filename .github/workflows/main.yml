@@ -24,7 +24,7 @@ jobs:
       # - name: Format
         # run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
       - name: Build
-        run: bazel build --platforms=@io_bazel_rules_go//go/toolchain //cmd/bmx:bmx
+        run: bazel build --platforms=@io_bazel_rules_go//go/toolchain:${{matrix.platform}} //cmd/bmx:bmx
       - name: Test
         run: bazel test //...
       - name: Package
