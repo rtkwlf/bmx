@@ -21,8 +21,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
-      - name: Format
-        run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
+      # - name: Format
+        # run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
       - name: Build
         run: bazel build --platforms=@io_bazel_rules_go//go/toolchain //cmd/bmx:bmx
       - name: Test
