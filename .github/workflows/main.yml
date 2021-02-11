@@ -13,23 +13,24 @@ jobs:
   test:
     strategy:
       matrix:
-        platform: [linux_amd64, windows_amd64, darwin_amd64]
-    runs-on: ubuntu-latest
+        platform: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.platform }}
     timeout-minutes: 5
     env:
       GO111MODULE: on
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
-      # - name: Format
-        # run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
+      - name: Format
+        run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
+        if: matrix.os == 'ubuntu-latest'
       - name: Build
-        run: bazel build --platforms=@io_bazel_rules_go//go/toolchain:${{matrix.platform}} //cmd/bmx:bmx
+        run: bazel build //cmd/bmx:bmx
       - name: Test
-        run: bazel test --platforms=@io_bazel_rules_go//go/toolchain:${{matrix.platform}} //...
+        run: bazel test //...
       - name: Package
         run: |
-          bazel build --platforms=@io_bazel_rules_go//go/toolchain:${{matrix.platform}} //:package
+          bazel build //:package
           mkdir -p artifacts/
           cp bazel-bin/package* artifacts/
       - name: Upload artifacts
