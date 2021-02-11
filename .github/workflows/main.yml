@@ -13,8 +13,8 @@ jobs:
   test:
     strategy:
       matrix:
-        platform: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.platform }}
+        platform: [linux_amd64, windows_amd64, darwin_amd64]
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
       GO111MODULE: on
@@ -25,9 +25,11 @@ jobs:
         run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
         if: matrix.os == 'ubuntu-latest'
       - name: Build
-        run: bazel build //...
+        run: bazel build --platforms=@io_bazel_rules_go//go/toolchain //cmd/bmx:bmx
       - name: Test
         run: bazel test //...
+      - name: Package
+        run: bazel build //:package
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
