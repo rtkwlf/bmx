@@ -17,6 +17,7 @@ You can upgrade the go dependencies by running the following commands:
 ```bash
 go get -u ./...
 go get -t -u ./...
+go mod vendor
 go mod tidy
 ```
 
