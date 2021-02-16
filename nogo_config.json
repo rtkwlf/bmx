@@ -1,17 +1,20 @@
 {
     "unsafeptr": {
       "exclude_files": {
-        "external/*": "third party code"
+        "external/*": "third party code",
+        "vendor/*": "third party code"
       }
     },
     "unreachable": {
       "exclude_files": {
-        "external/*": "third party code"
+        "external/*": "third party code",
+        "vendor/*": "third party code"
       }
     },
     "vet": {
       "exclude_files": {
-        "external/*": "third party code"
+        "external/*": "third party code",
+        "vendor/*": "third party code"
       }
     }
   }
