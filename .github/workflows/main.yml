@@ -5,7 +5,9 @@ on:
       - .github/workflows/main.yml
       - "**/*.go"
       - "**/*.bazel"
+      - "WORKSPACE"
       - ".bazelrc"
+      - "nogo_config.json"
       - "go.mod"
       - "go.sum"
 

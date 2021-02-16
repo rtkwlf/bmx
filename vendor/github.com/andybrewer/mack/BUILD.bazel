@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "alert.go",
+        "beep.go",
+        "clipboard.go",
+        "dialog.go",
+        "list.go",
+        "mack.go",
+        "notification.go",
+        "say.go",
+        "tell.go",
+    ],
+    importmap = "github.com/rtkwlf/bmx/vendor/github.com/andybrewer/mack",
+    importpath = "github.com/andybrewer/mack",
+    visibility = ["//visibility:public"],
+)

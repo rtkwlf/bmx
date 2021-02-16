@@ -17,13 +17,14 @@ You can upgrade the go dependencies by running the following commands:
 ```bash
 go get -u ./...
 go get -t -u ./...
+go mod vendor
 go mod tidy
 ```
 
 You can then update the dependencies tracked in bazel by running the following command:
 
 ```bash
-bazel run //:gazelle -- update-repos -from_file=go.mod -to_macro=deps.bzl%go_dependencies
+bazel run //:gazelle -- update-repos -build_external=vendored -from_file=go.mod -to_macro=deps.bzl%go_dependencies
 ```
 
 This will re-generate the `deps.bzl` file that defines all of the golang dependencies used in the project.

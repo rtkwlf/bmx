@@ -31,8 +31,8 @@ go_library(
         "//saml/identityProviders/okta:go_default_library",
         "//saml/serviceProviders:go_default_library",
         "//saml/serviceProviders/aws:go_default_library",
-        "@com_github_aws_aws_sdk_go//service/sts:go_default_library",
-        "@in_gopkg_ini_v1//:go_default_library",
+        "//vendor/github.com/aws/aws-sdk-go/service/sts:go_default_library",
+        "//vendor/gopkg.in/ini.v1:go_default_library",
     ],
 )
 
