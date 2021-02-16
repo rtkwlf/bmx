@@ -1,5 +1,13 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test", "nogo")
 load("@bazel_gazelle//:def.bzl", "gazelle")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
+
+pkg_tar(
+    name = "package",
+    package_dir = "/",
+    srcs = ["//cmd/bmx:bmx"],
+    mode = "0755",
+)
 
 # gazelle:prefix github.com/rtkwlf/bmx
 gazelle(name = "gazelle")
