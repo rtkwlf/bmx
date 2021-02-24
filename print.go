@@ -74,6 +74,9 @@ func Print(idProvider identityProviders.IdentityProvider, awsProvider servicePro
 
 	if printOptions.AssumeRole != "" {
 		creds, err = awsProvider.AssumeRole(*creds, printOptions.AssumeRole, printOptions.User)
+		if err != nil {
+			log.Fatal(fmt.Errorf("Failed to assume role %s", printOptions.AssumeRole))
+		}
 	}
 
 	command := printCommand(printOptions, creds)
