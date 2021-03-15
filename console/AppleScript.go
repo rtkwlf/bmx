@@ -47,7 +47,7 @@ func (r AppleScriptConsole) Println(prompt string) error {
 func (r AppleScriptConsole) ReadLine(prompt string) (string, error) {
 	dialog := mack.DialogOptions{
 		Text:   prompt,
-		Title:  prompt,
+		Title:  fmt.Sprintf("BMX Prompt: %s", prompt),
 		Answer: " ",
 	}
 	response, err := mack.DialogBox(dialog)
@@ -70,7 +70,7 @@ func (r AppleScriptConsole) ReadLine(prompt string) (string, error) {
 func (r AppleScriptConsole) ReadInt(prompt string) (int, error) {
 	dialog := mack.DialogOptions{
 		Text:   prompt,
-		Title:  prompt,
+		Title:  fmt.Sprintf("BMX Prompt: %s", prompt),
 		Answer: " ",
 	}
 	response, err := mack.DialogBox(dialog)
@@ -99,7 +99,7 @@ func (r AppleScriptConsole) ReadInt(prompt string) (int, error) {
 func (r AppleScriptConsole) ReadPassword(prompt string) (string, error) {
 	dialog := mack.DialogOptions{
 		Text:         prompt,
-		Title:        prompt,
+		Title:        fmt.Sprintf("BMX Credential Request: %s", prompt),
 		HiddenAnswer: true,
 		Answer:       "123",
 	}
@@ -134,7 +134,7 @@ func (r AppleScriptConsole) Option(message string, prompt string, options []stri
 
 	listOptions := mack.ListOptions{
 		Items:   options,
-		Title:   message,
+		Title:  fmt.Sprintf("BMX Option Prompt: %s", message),
 		Message: prompt,
 	}
 	response, didCancel, err := mack.ListWithOpts(listOptions)
