@@ -85,7 +85,7 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v2
       with:
-        name: bmx-${{ matrix.platform }}-latest
+        name: bmx-${{ matrix.targetPlatform }}-latest
         path: artifacts/
 
     - name: Package artifact for release
