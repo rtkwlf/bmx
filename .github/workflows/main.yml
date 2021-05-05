@@ -30,7 +30,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v1
       - name: Format
-        run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
+        run: if [ "$(gofmt -l `find . -name '*.go' | grep -v vendor` 2>&1)" ]; then exit 1; fi
         if: matrix.os == 'ubuntu-latest'
       - name: Build
         run: bazel build //cmd/bmx:bmx
