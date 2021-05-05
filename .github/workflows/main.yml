@@ -97,11 +97,6 @@ jobs:
         name: bmx-${{ matrix.TARGET }}
         path: artifacts/
 
-    - name: Package artifact for release
-      run: |
-        mv package.tar ../${{ matrix.TARGET }}.tar
-      working-directory: artifacts/
-
     - name: Get Release File Name & Upload URL
       id: get_release_info
       run: |
@@ -119,6 +114,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-        asset_path: ./${{ matrix.TARGET }}.tar
+        asset_path: ./artifacts/package.tar
         asset_name: ${{ steps.get_release_info.outputs.file_name }}-${{ matrix.TARGET }}.tar
         asset_content_type: application/zip
