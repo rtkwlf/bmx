@@ -102,7 +102,7 @@ jobs:
         tar -xvf package.tar
         rm -f *.args
         rm -f package.tar
-        zip -v -r ../${{ matrix.TARGET }}.zip *
+        zip -v -r ../${{ matrix.TARGET }}.zip .
       working-directory: artifacts/
 
     - name: Get Release File Name & Upload URL
