@@ -99,6 +99,9 @@ jobs:
 
     - name: Package artifact for release
       run: |
+        rm *.args
+        tar -xvf package.tar
+        rm package.tar
         zip -v -r ../${{ matrix.TARGET }}.zip *
       working-directory: artifacts/
 
