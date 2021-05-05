@@ -134,7 +134,7 @@ func (r AppleScriptConsole) Option(message string, prompt string, options []stri
 
 	listOptions := mack.ListOptions{
 		Items:   options,
-		Title:  fmt.Sprintf("BMX Option Prompt: %s", message),
+		Title:   fmt.Sprintf("BMX Option Prompt: %s", message),
 		Message: prompt,
 	}
 	response, didCancel, err := mack.ListWithOpts(listOptions)

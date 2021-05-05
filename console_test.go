@@ -25,11 +25,11 @@ func TestFindAppByLabels(t *testing.T) {
 	}
 
 	dataset := []okta.OktaAppLink{
-		okta.OktaAppLink{Label: "awsAppTesting1"},
-		okta.OktaAppLink{Label: "myTestApp2"},
-		okta.OktaAppLink{Label: "testingForAws"},
-		okta.OktaAppLink{Label: "MyAwsApp"},
-		okta.OktaAppLink{Label: "NotAnAwsApp"},
+		{Label: "awsAppTesting1"},
+		{Label: "myTestApp2"},
+		{Label: "testingForAws"},
+		{Label: "MyAwsApp"},
+		{Label: "NotAnAwsApp"},
 	}
 
 	for _, test := range expectedLabels {
