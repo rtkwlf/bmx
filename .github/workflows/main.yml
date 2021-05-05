@@ -13,10 +13,16 @@ on:
 
 jobs:
   build:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        platform: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.platform }}
+        include:
+          - os: ubuntu-latest
+            TARGET: linux
+          - os: windows-latest
+            TARGET: windows
+          - os: macos-latest
+            TARGET: darwin
     timeout-minutes: 5
     env:
       GO111MODULE: on
@@ -38,7 +44,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: bmx-${{ matrix.platform }}
+          name: bmx-$${{ matrix.TARGET }}
           path: artifacts/
   release:
       name: Create Github Release
@@ -68,13 +74,16 @@ jobs:
   publish:
     if: contains(github.ref, 'tags/')
     needs: [build, release]
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        targetPlatform:
-          - macos
-          - windows
-          - ubuntu
-    runs-on: ubuntu-latest
+        include:
+          - os: ubuntu-latest
+            TARGET: linux
+          - os: windows-latest
+            TARGET: windows
+          - os: macos-latest
+            TARGET: darwin
     steps:
     - name: Load Release URL File from release job
       uses: actions/download-artifact@v1
@@ -85,12 +94,12 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v2
       with:
-        name: bmx-${{ matrix.targetPlatform }}-latest
+        name: bmx-${{ matrix.TARGET }}
         path: artifacts/
 
     - name: Package artifact for release
       run: |
-        zip -v -r ../${{ matrix.targetPlatform }}.zip *
+        zip -v -r ../${{ matrix.TARGET }}.zip *
       working-directory: artifacts/
 
     - name: Get Release File Name & Upload URL
@@ -110,6 +119,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-        asset_path: ./${{ matrix.targetPlatform }}.zip
-        asset_name: ${{ steps.get_release_info.outputs.file_name }}-${{ matrix.targetPlatform }}.zip
+        asset_path: ./${{ matrix.TARGET }}.zip
+        asset_name: ${{ steps.get_release_info.outputs.file_name }}-${{ matrix.TARGET }}.zip
         asset_content_type: application/zip
