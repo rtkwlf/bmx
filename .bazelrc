@@ -1,2 +1,2 @@
-build --stamp --workspace_status_command=./tools/stamp.sh
+build --stamp --workspace_status_command=./bazel/scripts/stamp.sh
 test --test_output=all
