@@ -9,6 +9,7 @@ go_library(
         "config.go",
         "credential-process.go",
         "login.go",
+        "logout.go",
         "print.go",
         "version.go",
         "write.go",
