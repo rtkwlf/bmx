@@ -66,6 +66,7 @@ func NewOktaClient(org string, consolerw console.ConsoleReader) (*OktaClient, er
 }
 
 type SessionCache interface {
+	ClearSessions()
 	SaveSessions(sessions []file.OktaSessionCache)
 	Sessions() ([]file.OktaSessionCache, error)
 }
@@ -271,6 +272,10 @@ func (o *OktaClient) GetCachedOktaSession(userid, org string) (file.OktaSessionC
 		}
 	}
 	return result, false
+}
+
+func (o *OktaClient) ClearCachedOktaSession() {
+	o.SessionCache.ClearSessions()
 }
 
 func readOktaCacheSessionsFile(o *OktaClient) ([]file.OktaSessionCache, error) {
