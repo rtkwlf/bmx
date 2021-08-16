@@ -22,7 +22,7 @@ type LoginCmdOptions struct {
 }
 
 type LogoutCmdOptions struct {
-	Org      string
+	Org string
 }
 
 func GetUserInfoFromLoginCmdOptions(loginOptions LoginCmdOptions) serviceProviders.UserInfo {
