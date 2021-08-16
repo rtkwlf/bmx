@@ -63,7 +63,7 @@ func (o *OktaSessionStorage) Sessions() ([]OktaSessionCache, error) {
 	return sessions, nil
 }
 
-func writeSessionFile(json string) error {
+func writeSessionFile(json []byte) error {
 	bmxHome := bmxHomeDir()
 	if _, err := os.Stat(bmxHome); os.IsNotExist(err) {
 		os.MkdirAll(bmxHome, os.ModeDir|os.ModePerm)
@@ -73,7 +73,7 @@ func writeSessionFile(json string) error {
 }
 
 func sessionsFilePath() string {
-	return path.join(bmxHomeDir(), sessionFileName)
+	return path.Join(bmxHomeDir(), sessionFileName)
 }
 
 func bmxHomeDir() string {
