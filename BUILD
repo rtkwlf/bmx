@@ -4,9 +4,9 @@ load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
 pkg_tar(
     name = "package",
-    package_dir = "/",
-    srcs = ["//cmd/bmx:bmx"],
+    srcs = ["//cmd/bmx"],
     mode = "0755",
+    package_dir = "/",
 )
 
 # gazelle:prefix github.com/rtkwlf/bmx
