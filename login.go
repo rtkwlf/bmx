@@ -21,6 +21,10 @@ type LoginCmdOptions struct {
 	Factor   string
 }
 
+type LogoutCmdOptions struct {
+	Org      string
+}
+
 func GetUserInfoFromLoginCmdOptions(loginOptions LoginCmdOptions) serviceProviders.UserInfo {
 	user := serviceProviders.UserInfo{
 		Org:      loginOptions.Org,
@@ -53,4 +57,8 @@ func Login(idProvider *okta.OktaClient, consolerw console.ConsoleReader, loginOp
 		fmt.Println(err)
 	}
 	return fmt.Sprintf("Session expires in %s", time.Until(expiresAt).Round(time.Second))
+}
+
+func Logout(idProvider *okta.OktaClient) {
+	idProvider.ClearCachedOktaSession()
 }
