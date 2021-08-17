@@ -32,6 +32,7 @@ type OktaSessionCache struct {
 }
 
 const (
+	configDirName   = ".bmx"
 	sessionFileName = "sessions"
 )
 
@@ -40,24 +41,17 @@ type OktaSessionStorage struct{}
 func (o *OktaSessionStorage) ClearSessions() {
 	sessions := make([]OktaSessionCache, 0)
 	sessionsJSON, _ := json.Marshal(sessions)
-	bmxHome := path.Join(userHomeDir(), ".bmx")
-	if _, err := os.Stat(bmxHome); os.IsNotExist(err) {
-		os.MkdirAll(bmxHome, os.ModeDir|os.ModePerm)
-	}
-	ioutil.WriteFile(path.Join(userHomeDir(), ".bmx", sessionFileName), sessionsJSON, 0644)
+
+	writeSessionFile(sessionsJSON)
 }
 
 func (o *OktaSessionStorage) SaveSessions(sessions []OktaSessionCache) {
 	sessionsJSON, _ := json.Marshal(sessions)
-	bmxHome := path.Join(userHomeDir(), ".bmx")
-	if _, err := os.Stat(bmxHome); os.IsNotExist(err) {
-		os.MkdirAll(bmxHome, os.ModeDir|os.ModePerm)
-	}
-	ioutil.WriteFile(path.Join(userHomeDir(), ".bmx", sessionFileName), sessionsJSON, 0644)
+	writeSessionFile(sessionsJSON)
 }
 
 func (o *OktaSessionStorage) Sessions() ([]OktaSessionCache, error) {
-	sessionsFile, err := ioutil.ReadFile(path.Join(userHomeDir(), ".bmx", sessionFileName))
+	sessionsFile, err := ioutil.ReadFile(sessionsFilePath())
 	if os.IsNotExist(err) {
 		return nil, nil
 	}
@@ -67,6 +61,23 @@ func (o *OktaSessionStorage) Sessions() ([]OktaSessionCache, error) {
 	var sessions []OktaSessionCache
 	json.Unmarshal([]byte(sessionsFile), &sessions)
 	return sessions, nil
+}
+
+func writeSessionFile(json []byte) error {
+	bmxHome := bmxHomeDir()
+	if _, err := os.Stat(bmxHome); os.IsNotExist(err) {
+		os.MkdirAll(bmxHome, os.ModeDir|os.ModePerm)
+	}
+	err := ioutil.WriteFile(sessionsFilePath(), json, 0644)
+	return err
+}
+
+func sessionsFilePath() string {
+	return path.Join(bmxHomeDir(), sessionFileName)
+}
+
+func bmxHomeDir() string {
+	return path.Join(userHomeDir(), configDirName)
 }
 
 func userHomeDir() string {
