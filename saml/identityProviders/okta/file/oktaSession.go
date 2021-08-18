@@ -68,7 +68,7 @@ func writeSessionFile(json []byte) error {
 	if _, err := os.Stat(bmxHome); os.IsNotExist(err) {
 		os.MkdirAll(bmxHome, os.ModeDir|os.ModePerm)
 	}
-	err := ioutil.WriteFile(sessionsFilePath(), json, 0644)
+	err := ioutil.WriteFile(sessionsFilePath(), json, 0600)
 	return err
 }
 
