@@ -93,8 +93,10 @@ func resolvePath(path string) string {
 }
 
 func writeToAwsCredentials(credentials *sts.Credentials, profile string, path string) {
-	os.OpenFile(path, os.O_RDONLY|os.O_CREATE, 0666)
-
+	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, 0600)
+	if err != nil {
+		log.Fatal(err)
+	}
 	cfg, err := ini.Load(path)
 	if err != nil {
 		log.Fatal(err)
@@ -102,5 +104,12 @@ func writeToAwsCredentials(credentials *sts.Credentials, profile string, path st
 	cfg.Section(profile).Key("aws_access_key_id").SetValue(*credentials.AccessKeyId)
 	cfg.Section(profile).Key("aws_secret_access_key").SetValue(*credentials.SecretAccessKey)
 	cfg.Section(profile).Key("aws_session_token").SetValue(*credentials.SessionToken)
-	cfg.SaveTo(path)
+	_, err = cfg.WriteTo(f)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := f.Close(); err != nil {
+		log.Fatal(err)
+	}
 }
