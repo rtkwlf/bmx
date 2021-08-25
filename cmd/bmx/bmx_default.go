@@ -3,7 +3,6 @@
 package main
 
 import (
-
 	"github.com/rtkwlf/bmx/config"
 	"github.com/rtkwlf/bmx/console"
 )
