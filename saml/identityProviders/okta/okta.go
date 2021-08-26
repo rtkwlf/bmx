@@ -182,10 +182,20 @@ func (o *OktaClient) ListAppLinks(userId string) ([]OktaAppLink, error) {
 	if err != nil {
 		return nil, err
 	}
+	if listApplicationsResponse.StatusCode < http.StatusOK ||
+		listApplicationsResponse.StatusCode >= http.StatusBadRequest {
+		return nil, fmt.Errorf(
+			"Could not list applications from Okta (Status %d)."+
+				" Please logout & login to refresh the session.",
+			listApplicationsResponse.StatusCode)
+	}
 	var oktaApplications []OktaAppLink
 	b, err := ioutil.ReadAll(listApplicationsResponse.Body)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf(
+			"Could not process application response from Okta."+
+				" Please logout & login to refresh the session. Error: [%s]",
+			err)
 	}
 	err = json.Unmarshal(b, &oktaApplications)
 	if err != nil {
