@@ -42,7 +42,7 @@ http_archive(
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 load("//bazel/go:deps.bzl", "go_dependencies")
 
-# gazelle:repository_macro deps.bzl%go_dependencies
+# gazelle:repository_macro bazel/go/deps.bzl%go_dependencies
 go_dependencies()
 
 gazelle_dependencies()
