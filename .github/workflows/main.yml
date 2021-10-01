@@ -23,7 +23,7 @@ jobs:
             TARGET: windows
           - os: macos-latest
             TARGET: darwin
-    timeout-minutes: 5
+    timeout-minutes: 10
     env:
       GO111MODULE: on
     steps:
