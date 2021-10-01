@@ -19,6 +19,7 @@ package okta
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -80,6 +81,11 @@ type OktaClient struct {
 	Retries       int
 }
 
+type oktaLoginForm struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
 func (o *OktaClient) GetSaml(appLink OktaAppLink) (string, error) {
 	appResponse, err := o.HttpClient.Get(appLink.LinkUrl)
 	if err != nil {
@@ -100,8 +106,14 @@ func (o *OktaClient) Authenticate(username, password, org, factor string) (strin
 		return "", err
 	}
 
-	body := fmt.Sprintf(`{"username":"%s", "password":"%s"}`, username, password)
-	authResponse, err := o.HttpClient.Post(url.String(), applicationJson, strings.NewReader(body))
+	body, err := json.Marshal(oktaLoginForm{
+		Username: username,
+		Password: password,
+	})
+	if err != nil {
+		return "", errors.New("Failed to construct login credentials JSON")
+	}
+	authResponse, err := o.HttpClient.Post(url.String(), applicationJson, strings.NewReader(string(body)))
 	if err != nil {
 		return "", err
 	}
