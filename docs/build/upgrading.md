@@ -27,4 +27,4 @@ You can then update the dependencies tracked in bazel by running the following c
 bazel run //:gazelle -- update-repos -build_external=vendored -from_file=go.mod -to_macro=bazel/go/deps.bzl%go_dependencies
 ```
 
-This will re-generate the `deps.bzl` file that defines all of the golang dependencies used in the project.
+This will re-generate the `bazel/go/deps.bzl` file that defines all of the golang dependencies used in the project.
