@@ -18,11 +18,15 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            TARGET: linux
+            TARGET: linux_amd64
           - os: windows-latest
-            TARGET: windows
+            TARGET: windows_amd64
           - os: macos-latest
-            TARGET: darwin
+            TARGET: darwin_amd64
+          - os: ubuntu-latest
+            TARGET: linux_arm64
+          - os: macos-latest
+            TARGET: darwin_arm64
     timeout-minutes: 10
     env:
       GO111MODULE: on
@@ -33,12 +37,13 @@ jobs:
         run: if [ "$(gofmt -l `find . -name '*.go' | grep -v vendor` 2>&1)" ]; then exit 1; fi
         if: matrix.os == 'ubuntu-latest'
       - name: Build
-        run: bazel build //cmd/bmx:bmx
+        run: bazel build --platforms=@io_bazel_rules_go//go/toolchain:${{ matrix.TARGET }} //cmd/bmx:bmx
       - name: Test
+        # Note we can't run the arch specific tests because they won't run
         run: bazel test //...
       - name: Package
         run: |
-          bazel build //:package
+          bazel build --platforms=@io_bazel_rules_go//go/toolchain:${{ matrix.TARGET }} //:package
           mkdir -p artifacts/
           cp bazel-bin/package* artifacts/
       - name: Upload artifacts
@@ -79,11 +84,15 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            TARGET: linux
+            TARGET: linux_amd64
+          - os: ubuntu-latest
+            TARGET: linux_arm64
           - os: windows-latest
-            TARGET: windows
+            TARGET: windows_amd64
           - os: macos-latest
-            TARGET: darwin
+            TARGET: darwin_amd64
+          - os: macos-latest
+            TARGET: darwin_arm64
     steps:
     - name: Load Release URL File from release job
       uses: actions/download-artifact@v1
