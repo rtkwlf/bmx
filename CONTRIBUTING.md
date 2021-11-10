@@ -2,7 +2,7 @@
 
 ## Contributing
 
-*Members of the AWN (rtkwlf) organization should consult internal documentation on contribution guidelines for repositories within rtkwlf.*
+*Members of the AWN (rtkwlf) organization should consult internal contribution guidelines for repositories within rtkwlf.*
 
 Pull requests are the best way to propose changes to the codebase (use [Github Flow](https://guides.github.com/introduction/flow/index.html)). We actively welcome your pull requests:
 
@@ -17,7 +17,7 @@ Pull requests are the best way to propose changes to the codebase (use [Github F
 
 This repository uses GitHub issues to track public bugs. Members of the AWN (rtkwlf) organization should use our internal ticketing system, rather than using GitHub issues.
 
-Report a bug by [opening a new issue]().
+Report a bug by [opening a new issue](https://github.com/rtkwlf/bmx/issues/new).
 
 ## Coding Style
 
