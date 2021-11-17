@@ -101,7 +101,7 @@ func (r AppleScriptConsole) ReadPassword(prompt string) (string, error) {
 		Text:         prompt,
 		Title:        fmt.Sprintf("BMX Credential Request: %s", prompt),
 		HiddenAnswer: true,
-		Answer:       "123",
+		Answer:       "",
 	}
 	response, err := mack.DialogBox(dialog)
 	if err != nil {

@@ -95,7 +95,7 @@ func (d ConfigLoader) LoadConfigs() UserConfig {
 }
 
 func (d ConfigLoader) getUserConfig() string {
-	userConfig := filepath.ToSlash(path.Join(d.UserDir(), ".bmx", configFileName))
+	userConfig := filepath.ToSlash(path.Join(d.UserDir(), projectFileName, configFileName))
 	if _, err := os.Stat(userConfig); err == nil {
 		return userConfig
 	}
