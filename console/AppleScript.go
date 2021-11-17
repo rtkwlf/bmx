@@ -48,7 +48,7 @@ func (r AppleScriptConsole) ReadLine(prompt string) (string, error) {
 	dialog := mack.DialogOptions{
 		Text:   prompt,
 		Title:  fmt.Sprintf("BMX Prompt: %s", prompt),
-		Answer: " ",
+		Answer: "",
 	}
 	response, err := mack.DialogBox(dialog)
 	if err != nil {
@@ -71,7 +71,7 @@ func (r AppleScriptConsole) ReadInt(prompt string) (int, error) {
 	dialog := mack.DialogOptions{
 		Text:   prompt,
 		Title:  fmt.Sprintf("BMX Prompt: %s", prompt),
-		Answer: " ",
+		Answer: "",
 	}
 	response, err := mack.DialogBox(dialog)
 	if err != nil {
@@ -101,7 +101,7 @@ func (r AppleScriptConsole) ReadPassword(prompt string) (string, error) {
 		Text:         prompt,
 		Title:        fmt.Sprintf("BMX Credential Request: %s", prompt),
 		HiddenAnswer: true,
-		Answer:       "123",
+		Answer:       "",
 	}
 	response, err := mack.DialogBox(dialog)
 	if err != nil {
