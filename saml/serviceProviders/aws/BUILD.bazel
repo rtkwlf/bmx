@@ -7,22 +7,22 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//console:go_default_library",
-        "//vendor/github.com/aws/aws-sdk-go/aws:go_default_library",
-        "//vendor/github.com/aws/aws-sdk-go/aws/credentials:go_default_library",
-        "//vendor/github.com/aws/aws-sdk-go/aws/session:go_default_library",
-        "//vendor/github.com/aws/aws-sdk-go/service/sts:go_default_library",
-        "//vendor/github.com/aws/aws-sdk-go/service/sts/stsiface:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws/credentials:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws/session:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/sts:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/sts/stsiface:go_default_library",
     ],
 )
 
 go_test(
     name = "go_default_test",
     srcs = ["provider_test.go"],
-    embed = [":go_default_library"],
     deps = [
+        ":go_default_library",
         "//mocks:go_default_library",
-        "//vendor/github.com/aws/aws-sdk-go/aws:go_default_library",
-        "//vendor/github.com/aws/aws-sdk-go/service/sts:go_default_library",
-        "//vendor/github.com/aws/aws-sdk-go/service/sts/stsiface:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/sts:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/sts/stsiface:go_default_library",
     ],
 )

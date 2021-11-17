@@ -12,6 +12,16 @@ pkg_tar(
 # gazelle:prefix github.com/rtkwlf/bmx
 gazelle(name = "gazelle")
 
+gazelle(
+    name = "gazelle-update-repos",
+    args = [
+        "-from_file=go.mod",
+        "-to_macro=bazel/go/deps.bzl%go_dependencies",
+        "-prune",
+    ],
+    command = "update-repos",
+)
+
 go_library(
     name = "go_default_library",
     srcs = [
@@ -31,8 +41,8 @@ go_library(
         "//saml/identityProviders/okta:go_default_library",
         "//saml/serviceProviders:go_default_library",
         "//saml/serviceProviders/aws:go_default_library",
-        "//vendor/github.com/aws/aws-sdk-go/service/sts:go_default_library",
-        "//vendor/gopkg.in/ini.v1:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/sts:go_default_library",
+        "@in_gopkg_ini_v1//:go_default_library",
     ],
 )
 
@@ -42,8 +52,8 @@ go_test(
         "console_test.go",
         "print_test.go",
     ],
-    embed = [":go_default_library"],
     deps = [
+        ":go_default_library",
         "//mocks:go_default_library",
         "//saml/identityProviders/okta:go_default_library",
         "//saml/serviceProviders/aws/mocks:go_default_library",
@@ -55,20 +65,4 @@ nogo(
     config = "nogo_config.json",
     vet = True,
     visibility = ["//visibility:public"],
-    deps = [
-        "@org_golang_x_tools//go/analysis/passes/asmdecl:go_tool_library",
-        "@org_golang_x_tools//go/analysis/passes/assign:go_tool_library",
-        "@org_golang_x_tools//go/analysis/passes/composite:go_tool_library",
-        "@org_golang_x_tools//go/analysis/passes/copylock:go_tool_library",
-        "@org_golang_x_tools//go/analysis/passes/httpresponse:go_tool_library",
-        "@org_golang_x_tools//go/analysis/passes/loopclosure:go_tool_library",
-        "@org_golang_x_tools//go/analysis/passes/lostcancel:go_tool_library",
-        "@org_golang_x_tools//go/analysis/passes/shift:go_tool_library",
-        "@org_golang_x_tools//go/analysis/passes/stdmethods:go_tool_library",
-        "@org_golang_x_tools//go/analysis/passes/structtag:go_tool_library",
-        "@org_golang_x_tools//go/analysis/passes/tests:go_tool_library",
-        "@org_golang_x_tools//go/analysis/passes/unreachable:go_tool_library",
-        "@org_golang_x_tools//go/analysis/passes/unsafeptr:go_tool_library",
-        "@org_golang_x_tools//go/analysis/passes/unusedresult:go_tool_library",
-    ],
 )

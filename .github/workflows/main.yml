@@ -19,7 +19,7 @@ jobs:
         include:
           - os: ubuntu-latest
             TARGET: linux_amd64
-          - os: windows-latest
+          - os: ubuntu-latest
             TARGET: windows_amd64
           - os: macos-latest
             TARGET: darwin_amd64
@@ -87,7 +87,7 @@ jobs:
             TARGET: linux_amd64
           - os: ubuntu-latest
             TARGET: linux_arm64
-          - os: windows-latest
+          - os: ubuntu-latest
             TARGET: windows_amd64
           - os: macos-latest
             TARGET: darwin_amd64

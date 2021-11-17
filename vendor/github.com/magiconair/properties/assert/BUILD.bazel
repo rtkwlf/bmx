@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["assert.go"],
-    importmap = "github.com/rtkwlf/bmx/vendor/github.com/magiconair/properties/assert",
-    importpath = "github.com/magiconair/properties/assert",
-    visibility = ["//visibility:public"],
-)
