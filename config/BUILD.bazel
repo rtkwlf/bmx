@@ -6,14 +6,16 @@ go_library(
     importpath = "github.com/rtkwlf/bmx/config",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/mitchellh/go-homedir:go_default_library",
-        "//vendor/gopkg.in/ini.v1:go_default_library",
+        "@com_github_mitchellh_go_homedir//:go_default_library",
+        "@in_gopkg_ini_v1//:go_default_library",
     ],
 )
 
 go_test(
     name = "go_default_test",
     srcs = ["config_test.go"],
-    embed = [":go_default_library"],
-    deps = ["//vendor/github.com/magiconair/properties/assert:go_default_library"],
+    deps = [
+        ":go_default_library",
+        "@com_github_magiconair_properties//assert:go_default_library",
+    ],
 )
