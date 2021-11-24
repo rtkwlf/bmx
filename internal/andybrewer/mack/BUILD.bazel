@@ -13,7 +13,6 @@ go_library(
         "say.go",
         "tell.go",
     ],
-    importmap = "github.com/rtkwlf/bmx/vendor/github.com/andybrewer/mack",
-    importpath = "github.com/andybrewer/mack",
+    importpath = "github.com/rtkwlf/bmx/internal/andybrewer/mack",
     visibility = ["//visibility:public"],
 )

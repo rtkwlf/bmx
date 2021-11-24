@@ -9,7 +9,7 @@ go_library(
     importpath = "github.com/rtkwlf/bmx/console",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/andybrewer/mack:go_default_library",
+        "//internal/andybrewer/mack:go_default_library",
         "@org_golang_x_crypto//ssh/terminal:go_default_library",
     ],
 )
