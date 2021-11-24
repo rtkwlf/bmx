@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/andybrewer/mack"
+	"github.com/rtkwlf/bmx/internal/andybrewer/mack"
 )
 
 // AppleScriptConsole is a MacOS gui interface for receiving input.
