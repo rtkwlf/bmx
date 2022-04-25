@@ -3,14 +3,16 @@ module github.com/rtkwlf/bmx
 go 1.16
 
 require (
-	github.com/andybrewer/mack v0.0.0-20200226161639-15be3d47cc54
-	github.com/aws/aws-sdk-go v1.40.54
-	github.com/magiconair/properties v1.8.5
+	github.com/andybrewer/mack v0.0.0-20220307193339-22e922cc18af
+	github.com/aws/aws-sdk-go v1.44.0
+	github.com/magiconair/properties v1.8.6
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/spf13/cobra v1.2.1
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
-	golang.org/x/net v0.0.0-20210929193557-e81a3d93ecf6
-	golang.org/x/sys v0.0.0-20211001092434-39dca1131b70 // indirect
-	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
-	gopkg.in/ini.v1 v1.63.2
+	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
+	github.com/spf13/cobra v1.4.0
+	github.com/spf13/viper v1.8.1 // indirect
+	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
+	golang.org/x/net v0.0.0-20220421235706-1d1ef9303861
+	golang.org/x/sys v0.0.0-20220422013727-9388b58f7150 // indirect
+	golang.org/x/term v0.0.0-20220411215600-e5f449aeb171 // indirect
+	gopkg.in/ini.v1 v1.66.4
 )

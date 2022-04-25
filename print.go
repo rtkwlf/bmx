@@ -17,6 +17,7 @@ limitations under the License.
 package bmx
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -30,6 +31,7 @@ import (
 const (
 	Bash       = "bash"
 	Powershell = "powershell"
+	Json       = "json"
 )
 
 type PrintCmdOptions struct {
@@ -89,6 +91,8 @@ func printCommand(printOptions PrintCmdOptions, creds *sts.Credentials) string {
 		return printPowershell(creds)
 	case Bash:
 		return printBash(creds)
+	case Json:
+		return printJson(creds)
 	}
 	return printDefaultFormat(creds)
 }
@@ -99,4 +103,12 @@ func printPowershell(credentials *sts.Credentials) string {
 
 func printBash(credentials *sts.Credentials) string {
 	return fmt.Sprintf("export AWS_SESSION_TOKEN=%s\nexport AWS_ACCESS_KEY_ID=%s\nexport AWS_SECRET_ACCESS_KEY=%s", *credentials.SessionToken, *credentials.AccessKeyId, *credentials.SecretAccessKey)
+}
+
+func printJson(credentials *sts.Credentials) string {
+	credsJson, err := json.Marshal(credentials)
+	if err != nil {
+		log.Fatal("Could not properly convert credentials into JSON")
+	}
+	return string(credsJson)
 }
