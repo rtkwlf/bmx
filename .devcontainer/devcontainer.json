@@ -3,7 +3,8 @@
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
-			"BAZEL_BUILDTOOLS_VERSION": "3.5.0"
+			"BAZEL_BUILDTOOLS_VERSION": "3.5.0",
+			"BAZEL_BAZELISK_VERSION": "v1.11.0"
 		}
 	},
 	"settings": {
