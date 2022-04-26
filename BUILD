@@ -57,6 +57,7 @@ go_test(
         "//mocks:go_default_library",
         "//saml/identityProviders/okta:go_default_library",
         "//saml/serviceProviders/aws/mocks:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/sts:go_default_library",
     ],
 )
 

@@ -1,11 +1,18 @@
-FROM gcr.io/cloud-marketplace-containers/google/bazel
+ARG VARIANT="1.17"
+FROM mcr.microsoft.com/vscode/devcontainers/go:0-${VARIANT}
+
 RUN apt-get update
-RUN apt-get install -y zsh && \
-    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 ARG BAZEL_BUILDTOOLS_VERSION
-ARG BAZEL_BUILDTOOLS_URL="https://github.com/bazelbuild/buildtools/releases/download/"
-RUN curl -sSL "${BAZEL_BUILDTOOLS_URL}/${BAZEL_BUILDTOOLS_VERSION}/buildozer" > /usr/local/bin/buildozer && \
-    curl -sSL "${BAZEL_BUILDTOOLS_URL}/${BAZEL_BUILDTOOLS_VERSION}/buildifier" >  /usr/local/bin/buildifier && \
+ARG BAZEL_BAZELISK_VERSION
+ARG BAZEL_BAZELISK_URL="https://github.com/bazelbuild/bazelisk/releases/download"
+ARG BAZEL_BUILDTOOLS_URL="https://github.com/bazelbuild/buildtools/releases/download"
+RUN curl -sSL "${BAZEL_BUILDTOOLS_URL}/${BAZEL_BUILDTOOLS_VERSION}/buildozer-linux-$(dpkg --print-architecture)" > /usr/local/bin/buildozer && \
+    curl -sSL "${BAZEL_BUILDTOOLS_URL}/${BAZEL_BUILDTOOLS_VERSION}/buildifier-linux-$(dpkg --print-architecture)" >  /usr/local/bin/buildifier && \
+    curl -sSL "${BAZEL_BAZELISK_URL}/${BAZEL_BAZELISK_VERSION}/bazelisk-linux-$(dpkg --print-architecture)" > /usr/local/bin/bazel && \
+    chmod +x /usr/local/bin/bazel && \
     chmod +x /usr/local/bin/buildozer && \
-    chmod +x /usr/local/bin/buildifier 
+    chmod +x /usr/local/bin/buildifier
+
+# Bazel & Python compatibility
+RUN ln /usr/bin/python3 /usr/bin/python

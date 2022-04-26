@@ -17,9 +17,11 @@ limitations under the License.
 package bmx_test
 
 import (
+	"encoding/json"
 	"strings"
 	"testing"
 
+	"github.com/aws/aws-sdk-go/service/sts"
 	"github.com/rtkwlf/bmx"
 	"github.com/rtkwlf/bmx/mocks"
 	awsmocks "github.com/rtkwlf/bmx/saml/serviceProviders/aws/mocks"
@@ -89,5 +91,35 @@ func TestBashPrint(t *testing.T) {
 	assertAwsTokenEnv(t, output)
 	if !strings.Contains(output, "export ") {
 		t.Errorf("Shell command was incorrect, got: %s, expected bash", output)
+	}
+}
+
+func TestJsonPrint(t *testing.T) {
+	options := bmx.PrintCmdOptions{
+		Org:    "myorg",
+		Output: bmx.Json,
+	}
+
+	oktaClient := &mocks.Mokta{}
+
+	consolerw := mocks.ConsoleReaderMock{}
+	awsProvider := awsmocks.AwsServiceProviderMock{}
+
+	output := bmx.Print(oktaClient, awsProvider, consolerw, options)
+
+	if strings.Contains(output, "export ") {
+		t.Errorf("Shell command was incorrect, got: %s, expected json", output)
+	}
+	if strings.Contains(output, "$env:") {
+		t.Errorf("Shell command was incorrect, got: %s, expected json", output)
+	}
+	var creds *sts.Credentials
+	err := json.Unmarshal([]byte(output), &creds)
+	if err != nil {
+		t.Errorf("Did not receive valid JSON")
+	}
+
+	if *creds.AccessKeyId == "" || *creds.SecretAccessKey == "" || *creds.SessionToken == "" {
+		t.Errorf("what")
 	}
 }

@@ -1,4 +1,4 @@
-// +build linux darwin freebsd netbsd openbsd
+//go:build linux || darwin || freebsd || netbsd || openbsd
 
 /*
 Copyright 2019 D2L Corporation
