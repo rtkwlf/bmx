@@ -1,3 +1,6 @@
+> This repository is now deprecated, and no longer maintained. It is recommended to look at the upstream project: (https://github.com/Brightspace/bmx/).
+
+
 # BMX
 
 BMX grants you API access to your AWS accounts, based on Okta credentials that you already own.  
